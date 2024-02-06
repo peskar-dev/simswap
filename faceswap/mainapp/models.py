@@ -14,3 +14,10 @@ class Image(models.Model):
 
     def __str__(self):
         return self.title
+
+class GPU(models.Model):
+    device_info = models.CharField(max_length=250)
+    counter = models.IntegerField()
+
+    def __str__(self):
+        return self.title
