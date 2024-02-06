@@ -1,5 +1,6 @@
 from django.core.management.base import BaseCommand
-from mainapp.models import GPU  
+from mainapp.models import GPU
+from pycuda.compiler import SourceModule  
 
 import pycuda.driver as cuda
 import pycuda.autoinit
