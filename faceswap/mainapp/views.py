@@ -60,6 +60,6 @@ def download_photo(dirkey):
         return HttpResponse(status=404)
 
 def delete_directory(directory):
-    time.sleep(300)  # Ожидаем 5 минут (300 секунд)
+    time.sleep(300)  
     if os.path.exists(directory):
         os.system(f'rm -rf {directory}')
