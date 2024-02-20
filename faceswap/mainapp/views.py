@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import FileResponse,HttpResponse
 import subprocess
-import pycuda.driver as cuda
+from .tasks import process_photo_task
 from .forms import ImageUploadForm
 from mainapp.models import GPU
 from .models import Video
@@ -20,6 +20,8 @@ def home(request):
     else:
         form = ImageUploadForm()
     return render(request, 'home.html', {'videos': videos, 'form': form})
+#queue_name = f'render_queue_gpu_{gpuid}'
+
 
 def process_photo(request):
     if request.method == 'POST' and request.FILES.get('photo'):
@@ -33,15 +35,10 @@ def process_photo(request):
         
         #get least used gpu and run render in gpu context
         gpu = GPU.objects.order_by('counter').first()
-        gpu_device = cuda.Device(gpu.device_info)
-        
-        with gpu_device.make_context() as context:
-            command = f"cd ../roop || python run.py --execution-provider cuda -s {photo_path} -t ./VS.mp4 -o ./outputs "  
-            process = subprocess.run(command, shell=True, capture_output=True, text=True)
+        gpuid = gpu.id
 
+        process_photo_task.delay(photo_path, dirkey, gpuid)
         
-        gpu.counter +=1
-        gpu.save()
         return redirect('result', key=dirkey)
     return render(request, 'result.html')
 
