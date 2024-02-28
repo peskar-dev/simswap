@@ -1,0 +1,117 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'mainapp/css/style.css' %}" />
+    <title>VIVIENNE SABO</title>
+  </head>
+
+  <body class="body">
+    <div class="wrapper">
+      <header class="header">
+        <div class="container__header">
+          <div class="header__inner">
+            <a class="header__logo" href="/">
+              <img src="img/logo.svg" alt="Лого">
+            </a>
+            <nav class="header__nav">
+              <ul class="header__nav-list">
+                <li class="header__nav-item">
+                  <a class="header__nav-link" href="index.html">
+                    Главная
+                  </a>
+                </li>
+                <li class="header__nav-item">
+                  <a class="header__nav-link" href="uploading_photos.html">
+                    Создать видео
+                  </a>
+                </li>
+                <li class="header__nav-item">
+                  <a class="header__nav-link" href="index.html">
+                    Инструкция по созданию
+                  </a>
+                </li>
+                <li class="header__nav-item">
+                  <a class="header__nav-link" href="competition.html">
+                    Условия конкурса
+                  </a>
+                </li>
+                <li class="header__nav-item">
+                  <a class="header__nav-link" href="#">
+                    Контакты
+                  </a>
+                </li>
+              </ul>
+            </nav>
+            <a class="burger-icon" href="#" onclick="event.preventDefault()">
+              <span></span>
+            </a>
+          </div>
+        </div>
+      </header>
+      <main class="main">
+  
+        <section class="main__competition competition">
+          <div class="container">
+            <div class="competition__inner">
+              <h2 class="competition__title">
+                Условия Конкурса
+              </h2>
+              <div class="competition__text">
+                <p>
+                  1. Создай видео с нашим восточным
+                  принцем и собой в главной роли
+                  и поделись им с друзьями на страничке
+                  VK. Обязательно поставь хэштег
+                  #CabaretNoire Arabique
+                </p>
+                <p>
+                  2. Убедись, что ты подписана на аккаунт
+                  Vivienne Sabo в VK
+                </p>
+                <p>
+                  3. Каждую неделю в течение месяца мы
+                  будем выбирать четырех победителей
+                  с помощью рандомайзера! Ты сможешь
+                  получить годовой запас туши Cabaret
+                  Noire Arabique, чтобы покорять одним
+                  лишь взглядом!
+                </p>
+              </div>
+              <a class="button" href="uploading_photos.html">
+                Создать Видео
+              </a>
+            </div>
+        </section>
+  
+      </main>
+      <footer class="footer">
+        <div class="container">
+          <div class="footer__inner footer__inner-download">
+            <ul class="footer__list">
+              <li class="footer__item">
+                <a class="footer__link" href="#">
+                  Контактная информация
+                </a>
+              </li>
+              <li class="footer__item">
+                <a class="footer__link" href="#">
+                  Социальные сети
+                </a>
+              </li>
+              <li class="footer__item">
+                <a class="footer__link" href="#">
+                  Политика конфиденциальности
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+  <script src="{% static 'mainapp/js/main.js' %}"></script>
+</html>

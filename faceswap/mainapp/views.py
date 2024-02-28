@@ -9,6 +9,7 @@ import uuid
 import os
 import time
 import threading
+import logging
 
 def home(request):
     videos = Video.objects.filter(show=True)
@@ -40,7 +41,7 @@ def process_photo(request):
         process_photo_task.delay(photo_path, dirkey, gpuid)
         
         return redirect('result', key=dirkey)
-    return render(request, 'result.html')
+    return render(request, 'photo.html')
 
 def download_photo(dirkey):
     directory = f'./outputs/{dirkey}'
