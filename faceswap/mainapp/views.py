@@ -9,8 +9,12 @@ import uuid
 import os
 import time
 import threading
+import multiprocessing
 import logging
+import shutil
+from pathlib import Path
 
+lock = multiprocessing.RLock()
 def home(request):
     videos = Video.objects.filter(show=True)
     if request.method == 'POST':
@@ -32,13 +36,26 @@ def process_photo(request):
         
         #generating unique key and make dir with that key
         dirkey = uuid.uuid4().hex.lower()[0:6]
-        subprocess.run(f'mkdir ./outputs/{dirkey}', shell=True, capture_output=True, text=True)
+        subprocess.run(f'mkdir ./outputs/{dirkey}', shell=True)
+        output_path = os.path.abspath(f'./outputs/{dirkey}')
         
+
+        #TODO: Сделать подтягивание видика загруженного в бд (я чет не вкурил как)
+        video_obj = #здеся
+        video_file = video_obj.video_file
+        video_path = Path(video_file.path) 
+        new_video_path = Path('/tmp/')
+        shutil.copyfile(video_path, new_video_path)
+
         #get least used gpu and run render in gpu context
         gpu = GPU.objects.order_by('counter').first()
         gpuid = gpu.id
+        gpu = GPU.objects.get(id=gpuid)
+        gpu_device = cuda.Device(gpu.device_info)
 
-        process_photo_task.delay(photo_path, dirkey, gpuid)
+        multiprocessing.Process(target=render, args=(photo_path, gpu_device, output_path, new_video_path, lock)).start()
+
+        
         
         return redirect('result', key=dirkey)
     return render(request, 'photo.html')
@@ -52,7 +69,7 @@ def download_photo(dirkey):
             response = FileResponse(video_file)
             response['Content-Type'] = 'video/mp4'
             response['Content-Disposition'] = f'attachment; filename="{os.path.basename(video_file_path)}"'
-            threading.Thread(target=delete_directory, args=(f'outputs/{dirkey}',)).start()
+            threading.Thread(target=delete_directory, args=(f'outputs/{dirkey}',), name='folder_deletion').start()
             return response
     else:
         return HttpResponse(status=404)
@@ -61,3 +78,12 @@ def delete_directory(directory):
     time.sleep(300)  
     if os.path.exists(directory):
         os.system(f'rm -rf {directory}')
+
+def render(photo_path, gpu_device, output_path, new_video_path, lock):
+    lock.acquire()
+    with gpu_device.make_context() as context:
+        command = f"cd ../roop || python run.py --execution-provider cuda -s {photo_path} -t {new_video_path} -o {output_path}"
+        gpu.counter += 1
+        gpu.save()
+        subprocess.check_call(command, shell=True)
+    lock.realease()
