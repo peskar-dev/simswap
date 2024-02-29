@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import FileResponse,HttpResponse
 import subprocess
-from .tasks import process_photo_task
 from .forms import ImageUploadForm
 from mainapp.models import GPU
 from .models import Video
@@ -13,6 +12,7 @@ import multiprocessing
 import logging
 import shutil
 from pathlib import Path
+import pycuda.driver as cuda
 
 lock = multiprocessing.RLock()
 def home(request):
@@ -41,23 +41,17 @@ def process_photo(request):
         
 
         #TODO: Сделать подтягивание видика загруженного в бд (я чет не вкурил как)
-        video_obj = #здеся
+        video_obj = Video.objects.filter(show=True).first()
         video_file = video_obj.video_file
         video_path = Path(video_file.path) 
-        new_video_path = Path('/tmp/')
+        new_video_path = Path(f'./mainapp/outputs/{dirkey}.mp4')
         shutil.copyfile(video_path, new_video_path)
 
         #get least used gpu and run render in gpu context
-        gpu = GPU.objects.order_by('counter').first()
-        gpuid = gpu.id
-        gpu = GPU.objects.get(id=gpuid)
-        gpu_device = cuda.Device(gpu.device_info)
 
-        multiprocessing.Process(target=render, args=(photo_path, gpu_device, output_path, new_video_path, lock)).start()
-
+        multiprocessing.Process(target=cuda_render, args=(photo_path, output_path, new_video_path, lock,)).start()
         
-        
-        return redirect('result', key=dirkey)
+        return redirect('result')
     return render(request, 'photo.html')
 
 def download_photo(dirkey):
@@ -79,10 +73,16 @@ def delete_directory(directory):
     if os.path.exists(directory):
         os.system(f'rm -rf {directory}')
 
-def render(photo_path, gpu_device, output_path, new_video_path, lock):
+def cuda_render(photo_path, gpu_device, output_path, new_video_path, lock):
     lock.acquire()
+    cuda.init()
+    gpu = GPU.objects.order_by('counter').first()
+    gpuid = gpu.id
+    gpu = GPU.objects.get(id=gpuid)
+    gpu_device = cuda.Device("00000000:01:00.0")
+
     with gpu_device.make_context() as context:
-        command = f"cd ../roop || python run.py --execution-provider cuda -s {photo_path} -t {new_video_path} -o {output_path}"
+        command = f"cd ./roop || python run.py --execution-provider cuda -s {photo_path} -t {new_video_path} -o {output_path}"
         gpu.counter += 1
         gpu.save()
         subprocess.check_call(command, shell=True)
