@@ -8,13 +8,14 @@ import uuid
 import os
 import time
 import threading
-import multiprocessing
-import logging
+from concurrent.futures import ThreadPoolExecutor
 import shutil
 from pathlib import Path
 import pycuda.driver as cuda
+import tempfile 
 
-lock = multiprocessing.RLock()
+
+lock = threading.RLock()
 def home(request):
     videos = Video.objects.filter(show=True)
     if request.method == 'POST':
@@ -30,27 +31,45 @@ def home(request):
 
 def process_photo(request):
     if request.method == 'POST' and request.FILES.get('photo'):
-        #takes file path
         photo_file = request.FILES['photo']
-        photo_path = photo_file.temporary_file_path()
+
+        img_ext = Path(photo_file.name).suffix
+
+        with tempfile.NamedTemporaryFile(delete=False, suffix=img_ext) as tmp_file:
+          for chunk in photo_file.chunks():
+            tmp_file.write(chunk)
+  
+        photo_path = Path(tmp_file.name).resolve()
         
-        #generating unique key and make dir with that key
+            #generating unique key and make dir with that key
         dirkey = uuid.uuid4().hex.lower()[0:6]
-        subprocess.run(f'mkdir ./outputs/{dirkey}', shell=True)
-        output_path = os.path.abspath(f'./outputs/{dirkey}')
+        BASE_DIR = Path(__file__).resolve().parent
+        output_path = os.path.join(BASE_DIR, "outputs", dirkey)
+        subprocess.run(f'mkdir {output_path}', shell=True)
         
 
-        #TODO: Сделать подтягивание видика загруженного в бд (я чет не вкурил как)
+        
         video_obj = Video.objects.filter(show=True).first()
         video_file = video_obj.video_file
         video_path = Path(video_file.path) 
-        new_video_path = Path(f'./mainapp/outputs/{dirkey}.mp4')
+        new_video_path = Path(f'{output_path}/copyvid.mp4')
         shutil.copyfile(video_path, new_video_path)
-
-        #get least used gpu and run render in gpu context
-
-        multiprocessing.Process(target=cuda_render, args=(photo_path, output_path, new_video_path, lock,)).start()
         
+        MAIN_DIR = Path(__file__).resolve().parent.parent 
+        roop_dir = MAIN_DIR / "roop"
+
+            #get least used gpu and run render in gpu context
+        gpu = GPU.objects.order_by('counter').first()
+        gpuid = gpu.id
+        print(f'gpu = {gpu.device_info}')
+        cuda.init()
+        gpu_device = cuda.Device(gpu.device_info)
+
+        # pool = ThreadPoolExecutor(max_workers=1)
+        # rend = pool.submit(cuda_render, photo_path, output_path, new_video_path, gpu_device,roop_dir)
+        threading.Thread(target=cuda_render, args=(photo_path, output_path, new_video_path, gpu_device,roop_dir,), name=f'render_{gpuid}').start()
+        gpu.counter += 1
+        gpu.save()
         return redirect('result')
     return render(request, 'photo.html')
 
@@ -73,17 +92,9 @@ def delete_directory(directory):
     if os.path.exists(directory):
         os.system(f'rm -rf {directory}')
 
-def cuda_render(photo_path, gpu_device, output_path, new_video_path, lock):
-    lock.acquire()
+def cuda_render(photo_path, output_path, new_video_path, gpu_device,roop_dir):
+    
     cuda.init()
-    gpu = GPU.objects.order_by('counter').first()
-    gpuid = gpu.id
-    gpu = GPU.objects.get(id=gpuid)
-    gpu_device = cuda.Device("00000000:01:00.0")
-
-    with gpu_device.make_context() as context:
-        command = f"cd ./roop || python run.py --execution-provider cuda -s {photo_path} -t {new_video_path} -o {output_path}"
-        gpu.counter += 1
-        gpu.save()
-        subprocess.check_call(command, shell=True)
-    lock.realease()
+    command = f"python run.py --execution-provider cuda -s {photo_path} -t {new_video_path} -o {output_path}/result.mp4"
+    subprocess.check_call(command, shell=True, cwd=roop_dir)
+    

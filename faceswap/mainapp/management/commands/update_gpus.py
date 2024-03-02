@@ -16,7 +16,7 @@ class Command(BaseCommand):
 
         for i in range(num_gpus):
             gpu = cuda.Device(i)
-            print(gpu)
-            GPU.objects.create(device_info=gpu, counter=0)
+            print(gpu.pci_bus_id())
+            GPU.objects.create(device_info=gpu.pci_bus_id(), counter=0)
 
         self.stdout.write(self.style.SUCCESS('Successfully updated GPU data in the database'))
