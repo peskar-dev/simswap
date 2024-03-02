@@ -74,8 +74,9 @@ def process_photo(request):
     return render(request, 'photo.html')
 
 def download_photo(dirkey):
-    directory = f'./outputs/{dirkey}'
-    video_file_path = os.path.join(directory, 'output.mp4')  
+    BASE_DIR = Path(__file__).resolve().parent
+    directory = os.path.join(BASE_DIR, "outputs", dirkey)
+    video_file_path = os.path.join(directory, 'result.mp4')  
     
     if os.path.exists(video_file_path):
         with open(video_file_path, 'rb') as video_file:
