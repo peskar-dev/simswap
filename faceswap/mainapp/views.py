@@ -55,47 +55,49 @@ def process_photo(request):
         new_video_path = Path(f'{output_path}/copyvid.mp4')
         shutil.copyfile(video_path, new_video_path)
         
+        
         MAIN_DIR = Path(__file__).resolve().parent.parent 
         roop_dir = MAIN_DIR / "roop"
-
+        
             #get least used gpu and run render in gpu context
         gpu = GPU.objects.order_by('counter').first()
         gpuid = gpu.id
-        print(f'gpu = {gpu.device_info}')
+        
         cuda.init()
         gpu_device = cuda.Device(gpu.device_info)
 
-        # pool = ThreadPoolExecutor(max_workers=1)
-        # rend = pool.submit(cuda_render, photo_path, output_path, new_video_path, gpu_device,roop_dir)
-        threading.Thread(target=cuda_render, args=(photo_path, output_path, new_video_path, gpu_device,roop_dir,), name=f'render_{gpuid}').start()
+        with ThreadPoolExecutor(max_workers=2, thread_name_prefix='render_queue') as pool:
+            rend = pool.submit(cuda_render, photo_path, output_path, new_video_path, gpu_device,roop_dir)
+        # threading.Thread(target=cuda_render, args=(photo_path, output_path, new_video_path, gpu_device,roop_dir,), name=f'render_{gpuid}').start()
+
         gpu.counter += 1
         gpu.save()
-        return redirect('result')
-    return render(request, 'photo.html')
+        return redirect('result', dirkey=dirkey)
 
-def download_photo(dirkey):
+def download_photo(request, dirkey):
     BASE_DIR = Path(__file__).resolve().parent
     directory = os.path.join(BASE_DIR, "outputs", dirkey)
     video_file_path = os.path.join(directory, 'result.mp4')  
     
     if os.path.exists(video_file_path):
-        with open(video_file_path, 'rb') as video_file:
-            response = FileResponse(video_file)
-            response['Content-Type'] = 'video/mp4'
-            response['Content-Disposition'] = f'attachment; filename="{os.path.basename(video_file_path)}"'
-            threading.Thread(target=delete_directory, args=(f'outputs/{dirkey}',), name='folder_deletion').start()
-            return response
-    else:
-        return HttpResponse(status=404)
+
+        response = FileResponse(open(video_file_path, 'rb'))
+        response['Content-Type'] = 'video/mp4'
+        response['Content-Disposition'] = f'attachment; filename="{os.path.basename(video_file_path)}"'
+        threading.Thread(target=delete_directory, args=(directory,)).start()
+        return response
+
 
 def delete_directory(directory):
-    time.sleep(300)  
-    if os.path.exists(directory):
-        os.system(f'rm -rf {directory}')
+    print(directory)
+    time.sleep(10)  
+    shutil.rmtree(directory)
 
 def cuda_render(photo_path, output_path, new_video_path, gpu_device,roop_dir):
-    
+    time.sleep(2)
     cuda.init()
     command = f"python run.py --execution-provider cuda -s {photo_path} -t {new_video_path} -o {output_path}/result.mp4"
     subprocess.check_call(command, shell=True, cwd=roop_dir)
+    return 1
+    
     
