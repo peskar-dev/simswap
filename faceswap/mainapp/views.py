@@ -31,23 +31,21 @@ def home(request):
 
 def process_photo(request):
     if request.method == 'POST' and request.FILES.get('photo'):
-        photo_file = request.FILES['photo']
-
-        img_ext = Path(photo_file.name).suffix
-
-        with tempfile.NamedTemporaryFile(delete=False, suffix=img_ext) as tmp_file:
-          for chunk in photo_file.chunks():
-            tmp_file.write(chunk)
-  
-        photo_path = Path(tmp_file.name).resolve()
-        
-            #generating unique key and make dir with that key
         dirkey = uuid.uuid4().hex.lower()[0:6]
         BASE_DIR = Path(__file__).resolve().parent
         output_path = os.path.join(BASE_DIR, "outputs", dirkey)
         subprocess.run(f'mkdir -p {output_path}', shell=True)
-        
 
+        photo_file = request.FILES['photo']
+        img_ext = Path(photo_file.name).suffix
+
+        photo_path = output_path / f"photo{img_ext}"
+
+        with open(photo_path, 'wb') as output_file:
+            for chunk in photo_file.chunks():
+                output_file.write(chunk)
+        
+            #generating unique key and make dir with that key
         
         video_obj = Video.objects.filter(show=True).first()
         video_file = video_obj.video_file
