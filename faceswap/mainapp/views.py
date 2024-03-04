@@ -39,7 +39,7 @@ def process_photo(request):
         photo_file = request.FILES['photo']
         img_ext = Path(photo_file.name).suffix
 
-        photo_path = output_path / f"photo{img_ext}"
+        photo_path = os.path.join(output_path, f"photo{img_ext}")
 
         with open(photo_path, 'wb') as output_file:
             for chunk in photo_file.chunks():
