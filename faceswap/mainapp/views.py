@@ -98,7 +98,7 @@ def delete_directory(directory):
 def cuda_render(photo_path, output_path, new_video_path, gpu_device,roop_dir):
     time.sleep(2)
     cuda.init()
-    command = f"python run.py --execution-provider cuda -s {photo_path} -t {new_video_path} -o {output_path}/result.mp4"
+    command = f"python3 run.py --execution-provider cuda -s {photo_path} -t {new_video_path} -o {output_path}/result.mp4"
     subprocess.check_call(command, shell=True, cwd=roop_dir)
     return 1
     
