@@ -48,12 +48,6 @@
           <div class="container">
             <div class="download__inner">
               <h2 class="download__title">Создание видео</h2>
-              <form action="{% url 'process' %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <label for="photo">Выберите фото для загрузки:</label>
-                <input type="file" name="photo" id="photo" required style="display: block" />
-                <button type="submit">Загрузить фото</button>
-              </form>
               <div class="download__img">
                 <img src="/media/mainapp/images/Instruction.png" alt="" />
               </div>
@@ -102,11 +96,10 @@
                 <p>Открытое лицо</p>
               </li>
             </ul>
-            <form action="" method="post" enctype="multipart/form-data">
+            <form id="upload-form" action="{% url 'process' %}" method="post" enctype="multipart/form-data">
               {% csrf_token %}
               <div class="button-upload-btn upload-btn">Загрузить</div>
-              <input type="file" id="file-input" accept="image/*" style="display: none" />
-              <button type="submit" class="button-upload-btn upload-btn">Загрузить</button>
+              <input type="file" id="file-input" name="photo" accept="image/*" style="display: none" />
             </form>
           </div>
         </div>
@@ -115,17 +108,11 @@
     <div class="progress-modal hidden">
       <div class="progress-modal-inner">
         <h1 class="progress-modal-title">Ваше видео в процессе создания</h1>
-        <div class="progress-bar">
-          <div class="progress"></div>
-          <div class="progressValueText">
-            <div class="progress-text">0%</div>
-            <span>Завершено</span>
-          </div>
-        </div>
+        <span class="loader"></span>
       </div>
     </div>
   </body>
 
   <script src="{% static 'mainapp/js/main.js' %}"></script>
-  <!-- <script src="{% static 'mainapp/js/modal.js' %}"></script> -->
+  <script src="{% static 'mainapp/js/modal.js' %}"></script>
 </html>
