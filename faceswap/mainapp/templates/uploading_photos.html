@@ -49,7 +49,7 @@
             <div class="download__inner">
               <h2 class="download__title">Создание видео</h2>
               <form action="{% url 'process' %}" method="post" enctype="multipart/form-data">
-                {% csrf_token %}
+               
                 <label for="photo">Выберите фото для загрузки:</label>
                 <input type="file" name="photo" id="photo" required style="display: block" />
                 <button type="submit">Загрузить фото</button>
