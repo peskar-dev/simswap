@@ -96,7 +96,9 @@
     <div class="modal">
       <div class="modal__window-viewing">  
         <div class="modal__viewing-img">
-          <img src="/media/mainapp/images/uploaded_photo.jpg" alt="">
+          <video controls class="modal__video">
+            <source src="/outputs/{{ dirkey }}/result.mp4" type="video/mp4">
+          </video>
           <div class="modal__cancel">
             <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M1 1L10 10M1 10L10 1" stroke="black" />

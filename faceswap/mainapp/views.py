@@ -11,7 +11,6 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 import shutil
 from pathlib import Path
-import pycuda.driver as cuda
 import tempfile 
 
 
@@ -57,23 +56,16 @@ def process_photo(request):
         MAIN_DIR = Path(__file__).resolve().parent.parent 
         roop_dir = MAIN_DIR / "roop"
         
-            #get least used gpu and run render in gpu context
-        gpu = GPU.objects.order_by('counter').first()
-        gpuid = gpu.id
         
-        cuda.init()
-        gpu_device = cuda.Device(gpu.device_info)
         print(f's = {photo_path}')
         print(f't = {new_video_path}')
         print(f'o = {output_path}')  
 
         with ThreadPoolExecutor(max_workers=2, thread_name_prefix='render_queue') as pool:
-            rend = pool.submit(cuda_render, photo_path, output_path, new_video_path, gpu_device,roop_dir)
+            rend = pool.submit(cuda_render, photo_path, output_path, new_video_path, roop_dir)
         # threading.Thread(target=cuda_render, args=(photo_path, output_path, new_video_path, gpu_device,roop_dir,), name=f'render_{gpuid}').start()
 
               
-        gpu.counter += 1
-        gpu.save()
         return redirect('result', dirkey=dirkey)
 
 def download_photo(request, dirkey):
@@ -95,10 +87,9 @@ def delete_directory(directory):
     time.sleep(10)  
     shutil.rmtree(directory)
 
-def cuda_render(photo_path, output_path, new_video_path, gpu_device,roop_dir):
+def cuda_render(photo_path, output_path, new_video_path, roop_dir):
     time.sleep(2)
-    cuda.init()
-    command = f"python3 run.py --execution-provider cuda -s {photo_path} -t {new_video_path} -o {output_path}/result.mp4"
+    command = f"python3 run.py --execution-provider cuda -s {photo_path} -t {new_video_path} -o {output_path}/result.mp4 --frame-processor face_swapper --keep-frames --reference-frame-number 31"
     subprocess.check_call(command, shell=True, cwd=roop_dir)
     return 1
     
