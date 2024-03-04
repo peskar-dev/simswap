@@ -45,7 +45,7 @@ def process_photo(request):
         dirkey = uuid.uuid4().hex.lower()[0:6]
         BASE_DIR = Path(__file__).resolve().parent
         output_path = os.path.join(BASE_DIR, "outputs", dirkey)
-        subprocess.run(f'mkdir {output_path}', shell=True)
+        subprocess.run(f'mkdir -p {output_path}', shell=True)
         
 
         
