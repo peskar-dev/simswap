@@ -1,0 +1,24 @@
+version: "3.8"
+
+
+services:
+  faceswap:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: faceswap:latest
+    env_file:
+      - .env
+    container_name: faceswap
+    volumes:
+      - ./faceswap/:/app/
+    ports:
+        - "0.0.0.0:8000:8000"
+    command: gunicorn wsgi -c gunicorn.conf.py
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: "all"
+              capabilities: [gpu]
