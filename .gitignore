@@ -149,3 +149,4 @@ dmypy.json
 faceswap/media/videos
 faceswap/mainapp/outputs
 faceswap/roop
+faceswap/static
