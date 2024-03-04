@@ -65,11 +65,15 @@ def process_photo(request):
         
         cuda.init()
         gpu_device = cuda.Device(gpu.device_info)
+        print(f's = {photo_path}')
+        print(f't = {new_video_path}')
+        print(f'o = {output_path}')  
 
         with ThreadPoolExecutor(max_workers=2, thread_name_prefix='render_queue') as pool:
             rend = pool.submit(cuda_render, photo_path, output_path, new_video_path, gpu_device,roop_dir)
         # threading.Thread(target=cuda_render, args=(photo_path, output_path, new_video_path, gpu_device,roop_dir,), name=f'render_{gpuid}').start()
 
+              
         gpu.counter += 1
         gpu.save()
         return redirect('result', dirkey=dirkey)
