@@ -1,6 +1,6 @@
 from typing import Optional
-import cv2
 
+import cv2
 from roop.typing import Frame
 
 

@@ -2,7 +2,6 @@ import logging
 import os
 import shutil
 import subprocess
-import tempfile
 import threading
 import time
 import uuid
@@ -11,7 +10,6 @@ from pathlib import Path
 
 from django.http import FileResponse, HttpResponse
 from django.shortcuts import redirect, render
-from mainapp.models import GPU
 
 from .forms import ImageUploadForm
 from .models import Video
@@ -31,9 +29,6 @@ def home(request):
     else:
         form = ImageUploadForm()
     return render(request, "home.html", {"videos": videos, "form": form})
-
-
-# queue_name = f'render_queue_gpu_{gpuid}'
 
 
 def process_photo(request):
@@ -78,10 +73,9 @@ def process_photo(request):
         with ThreadPoolExecutor(
             max_workers=2, thread_name_prefix="render_queue"
         ) as pool:
-            rend = pool.submit(
+            pool.submit(
                 cuda_render, photo_path, output_path, new_video_path, roop_dir
             )
-        # threading.Thread(target=cuda_render, args=(photo_path, output_path, new_video_path, gpu_device,roop_dir,), name=f'render_{gpuid}').start()
 
         return redirect("result", dirkey=dirkey)
 
@@ -96,9 +90,9 @@ def download_photo(request, dirkey):
         logger.debug(f"Found video file: {video_file_path}")
         response = FileResponse(open(video_file_path, "rb"))
         response["Content-Type"] = "video/mp4"
-        response["Content-Disposition"] = (
-            f'attachment; filename="{os.path.basename(video_file_path)}"'
-        )
+        response[
+            "Content-Disposition"
+        ] = f'attachment; filename="{os.path.basename(video_file_path)}"'
         threading.Thread(target=delete_directory, args=(directory,)).start()
         return response
     logger.debug(f"No video file found: {video_file_path}")
@@ -112,16 +106,8 @@ def delete_directory(directory):
 
 
 def cuda_render(photo_path, output_path, new_video_path, roop_dir):
-    #     gpu = GPU.objects.order_by('counter').first()
-    #     if(!gpu):
-    #         subprocess.check_call('')
-    # -   gpuid = gpu.id
-
-    # -   cuda.init()
-    # -   gpu_device = cuda.Device(gpu.device_info)
-    time.sleep(2)
     logger.debug(f"Rendering {photo_path}")
     command = f"python3 run.py --execution-provider cuda -s {photo_path} -t {new_video_path} -o {output_path}/result.mp4 --frame-processor face_swapper --keep-frames --reference-frame-number 31"
     logger.debug(f"Command: {command}")
-    subprocess.check_call(command, shell=True, cwd=roop_dir)
+    # subprocess.check_call(command, shell=True, cwd=roop_dir)
     return 1

@@ -1,0 +1,25 @@
+[tool.poetry]
+name = "arabiquenoire"
+version = "0.1.0"
+description = ""
+authors = ["v.kovalchuk <v.kovalchuk@crysto.ru>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "3.10.11"
+django = "^5.0.3"
+sentry-sdk = {extras = ["django"], version = "^1.40.6"}
+django-rest-framework = "^0.1.0"
+gunicorn = "^21.2.0"
+celery = {extras = ["redis"], version = "^5.3.6"}
+pillow = "^10.2.0"
+
+
+[tool.poetry.group.dev.dependencies]
+black = "^24.2.0"
+isort = "^5.13.2"
+pre-commit = "^3.6.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

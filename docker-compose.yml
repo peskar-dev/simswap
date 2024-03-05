@@ -14,7 +14,7 @@ services:
       - ./faceswap/:/app/
     ports:
         - "0.0.0.0:8000:8000"
-    command: gunicorn wsgi -c gunicorn.conf.py
+    command: gunicorn faceswap/wsgi -c gunicorn.conf.py
     deploy:
       resources:
         reservations:
