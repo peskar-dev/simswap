@@ -6,16 +6,24 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('mainapp', '0003_video_show'),
+        ("mainapp", "0003_video_show"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='GPU',
+            name="GPU",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('device_info', models.CharField(max_length=250)),
-                ('counter', models.IntegerField()),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("device_info", models.CharField(max_length=250)),
+                ("counter", models.IntegerField()),
             ],
         ),
     ]
