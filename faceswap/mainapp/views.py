@@ -122,5 +122,6 @@ def cuda_render(photo_path, output_path, new_video_path, roop_dir):
     time.sleep(2)
     logger.debug(f"Rendering {photo_path}")
     command = f"python3 run.py --execution-provider cuda -s {photo_path} -t {new_video_path} -o {output_path}/result.mp4 --frame-processor face_swapper --keep-frames --reference-frame-number 31"
+    logger.debug(f"Command: {command}")
     subprocess.check_call(command, shell=True, cwd=roop_dir)
     return 1
