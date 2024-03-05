@@ -44,7 +44,7 @@ def process_photo(request):
         BASE_DIR = Path(__file__).resolve().parent
         output_path = os.path.join(BASE_DIR, "outputs", dirkey)
         logger.debug(f"Creating temporary directory: {output_path}")
-        subprocess.run(f"mkdir -p {output_path}", shell=True)
+        os.makedirs(output_path, exist_ok=True)
 
         photo_file = request.FILES["photo"]
         img_ext = Path(photo_file.name).suffix
