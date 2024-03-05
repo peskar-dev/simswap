@@ -938,6 +938,7 @@ input[type='file'] {
   max-width: 380px;
   background-color: #000;
   z-index: 324;
+  width: 100%;
 }
 
 .progress-modal-title {
