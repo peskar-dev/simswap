@@ -90,9 +90,10 @@ def download_photo(request, dirkey):
     BASE_DIR = Path(__file__).resolve().parent
     directory = os.path.join(BASE_DIR, "outputs", dirkey)
     video_file_path = os.path.join(directory, "result.mp4")
+    logger.debug(f"Searching for video file: {video_file_path}")
 
     if os.path.exists(video_file_path):
-
+        logger.debug(f"Found video file: {video_file_path}")
         response = FileResponse(open(video_file_path, "rb"))
         response["Content-Type"] = "video/mp4"
         response["Content-Disposition"] = (
@@ -100,6 +101,8 @@ def download_photo(request, dirkey):
         )
         threading.Thread(target=delete_directory, args=(directory,)).start()
         return response
+    logger.debug(f"No video file found: {video_file_path}")
+    return HttpResponse(status=404)
 
 
 def delete_directory(directory):
