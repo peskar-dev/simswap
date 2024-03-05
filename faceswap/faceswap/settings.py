@@ -14,9 +14,7 @@ import os
 from pathlib import Path
 
 import sentry_sdk
-from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
-from sentry_sdk.integrations.redis import RedisIntegration
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,17 +24,17 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", "my_secret")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = int(os.getenv("DEBUG")) == 1
+DEBUG = int(os.getenv("DEBUG", 1)) == 1
 
 ALLOWED_HOSTS = [
     "127.0.0.1",
     "localhost",
-    *os.getenv("ALLOWED_HOSTS").split(","),
+    *os.getenv("ALLOWED_HOSTS", "").split(","),
 ]
-CSRF_TRUSTED_ORIGINS = [*os.getenv("CSRF_TRUSTED_ORIGINS").split(",")]
+CSRF_TRUSTED_ORIGINS = [*os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")]
 
 # Application definition
 
@@ -143,9 +141,21 @@ sentry_sdk.init(
     dsn=os.getenv("SENTRY_DSN_URL"),
     integrations=[
         DjangoIntegration(),
-        CeleryIntegration(),
-        RedisIntegration(),
     ],
     traces_sample_rate=0.5,
     send_default_pii=True,
 )
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "root": {
+        "handlers": ["console"],
+        "level": os.getenv("LOG_LEVEL", "DEBUG"),
+    },
+}

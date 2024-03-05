@@ -1,3 +1,4 @@
+import logging
 import os
 import shutil
 import subprocess
@@ -17,6 +18,8 @@ from .models import Video
 
 lock = threading.RLock()
 
+logger = logging.getLogger(__name__)
+
 
 def home(request):
     videos = Video.objects.filter(show=True)
@@ -35,13 +38,18 @@ def home(request):
 
 def process_photo(request):
     if request.method == "POST" and request.FILES.get("photo"):
+        logger.debug("Received POST request")
         dirkey = uuid.uuid4().hex.lower()[0:6]
+        logger.debug(f"Will create temporary directory: {dirkey}")
         BASE_DIR = Path(__file__).resolve().parent
         output_path = os.path.join(BASE_DIR, "outputs", dirkey)
+        logger.debug(f"Creating temporary directory: {output_path}")
         subprocess.run(f"mkdir -p {output_path}", shell=True)
 
         photo_file = request.FILES["photo"]
         img_ext = Path(photo_file.name).suffix
+
+        logger.debug(f"Received photo file: {photo_file}")
 
         photo_path = os.path.join(output_path, f"photo{img_ext}")
 
@@ -49,20 +57,23 @@ def process_photo(request):
             for chunk in photo_file.chunks():
                 output_file.write(chunk)
 
-            # generating unique key and make dir with that key
+        logger.debug(f"Saved photo file: {photo_path}")
 
         video_obj = Video.objects.filter(show=True).first()
+        logger.debug(f"Using video object: {video_obj}")
         video_file = video_obj.video_file
         video_path = Path(video_file.path)
         new_video_path = Path(f"{output_path}/copyvid.mp4")
+        logger.debug(f"Will save video file: {new_video_path}")
         shutil.copyfile(video_path, new_video_path)
+        logger.debug(f"Copied video file: {new_video_path}")
 
         MAIN_DIR = Path(__file__).resolve().parent.parent
         roop_dir = MAIN_DIR / "roop"
 
-        print(f"s = {photo_path}")
-        print(f"t = {new_video_path}")
-        print(f"o = {output_path}")
+        logger.info(f"s = {photo_path}")
+        logger.info(f"t = {new_video_path}")
+        logger.info(f"o = {output_path}")
 
         with ThreadPoolExecutor(
             max_workers=2, thread_name_prefix="render_queue"
@@ -106,6 +117,7 @@ def cuda_render(photo_path, output_path, new_video_path, roop_dir):
     # -   cuda.init()
     # -   gpu_device = cuda.Device(gpu.device_info)
     time.sleep(2)
+    logger.debug(f"Rendering {photo_path}")
     command = f"python3 run.py --execution-provider cuda -s {photo_path} -t {new_video_path} -o {output_path}/result.mp4 --frame-processor face_swapper --keep-frames --reference-frame-number 31"
     subprocess.check_call(command, shell=True, cwd=roop_dir)
     return 1
