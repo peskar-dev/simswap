@@ -639,6 +639,10 @@ html {
   z-index: -1;
 }
 
+.download__img-mobile {
+  display: none;
+}
+
 .instructions__inner {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -1162,6 +1166,18 @@ input[type='file'] {
     margin-top: 500px;
   }
 }
+
+@media (max-width: 450px) {
+  .download__img-mobile {
+    display: block;
+    margin-bottom: 32px;
+  }  
+
+  .download__img {
+    display: none;
+  }
+}
+
 @media (max-width: 450px) {
   .modal__window {
     padding: 30px 15px 55px;

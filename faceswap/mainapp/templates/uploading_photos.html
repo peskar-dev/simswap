@@ -15,7 +15,7 @@
         <div class="container__header">
           <div class="header__inner">
             <a class="header__logo" href="/">
-              <img src="/media/mainapp/images/logo.svg" alt="Лого" />
+              <img src="/media/mainapp/images/logo.png" alt="Лого" />
             </a>
             <nav class="header__nav">
               <ul class="header__nav-list">
@@ -50,6 +50,9 @@
               <h2 class="download__title">Создание видео</h2>
               <div class="download__img">
                 <img src="/media/mainapp/images/Instruction.png" alt="" />
+              </div>
+              <div class="download__img-mobile">
+                <img src="/media/mainapp/images/uploading-min.png" alt="" />
               </div>
               <button class="button button-upload-photo">Загрузить фото</button>
             </div>
@@ -99,7 +102,7 @@
             <form id="upload-form" action="{% url 'process' %}" method="post" enctype="multipart/form-data">
               {% csrf_token %}
               <div class="button-upload-btn upload-btn">Загрузить</div>
-              <input type="file" id="file-input" name="photo" accept="image/*" style="display: none" />
+              <input type="file" id="file-input" name="photo" accept=".jpg, .jpeg, .png" style="display: none" />
             </form>
           </div>
         </div>
