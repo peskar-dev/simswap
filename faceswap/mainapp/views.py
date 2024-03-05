@@ -84,10 +84,17 @@ def download_photo(request, dirkey):
 
 def delete_directory(directory):
     print(directory)
-    time.sleep(10)  
+    time.sleep(180)  
     shutil.rmtree(directory)
 
 def cuda_render(photo_path, output_path, new_video_path, roop_dir):
+#     gpu = GPU.objects.order_by('counter').first()
+#     if(!gpu):
+#         subprocess.check_call('')
+# -   gpuid = gpu.id
+
+# -   cuda.init()
+# -   gpu_device = cuda.Device(gpu.device_info)
     time.sleep(2)
     command = f"python3 run.py --execution-provider cuda -s {photo_path} -t {new_video_path} -o {output_path}/result.mp4 --frame-processor face_swapper --keep-frames --reference-frame-number 31"
     subprocess.check_call(command, shell=True, cwd=roop_dir)
