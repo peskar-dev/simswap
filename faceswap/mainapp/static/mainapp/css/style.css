@@ -1338,3 +1338,57 @@ input[type='file'] {
 .modal__video {
   max-width: 350px;
 }
+
+.image-wrapper {
+  width: 288px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
+}
+
+.woman {
+  position: absolute;
+  left: 64%;
+}
+
+.arrow {
+  position: absolute;
+  left: 75%;
+  top: 66%;
+  transform: translateY(50%);
+}
+
+.download__img {
+  width: 211px;
+  height: 300px;
+  overflow: hidden;
+  position: relative;
+  border-radius: 24px;
+  transform: rotate(5deg);
+}
+
+.download__img img {
+  position: absolute;
+  top: 62%;
+  left: 59%;
+  transform: translate(-50%, -50%);
+  width: 280%;
+}
+
+.woman-img {
+  width: 100px;
+  height: 100px;
+  overflow: hidden;
+  position: relative;
+  border-radius: 50%;
+  border: 5px solid #b8a46f;
+}
+
+.woman-img img {
+  position: absolute;
+  top: 69%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 212%;
+}
