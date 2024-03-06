@@ -1062,10 +1062,12 @@ input[type='file'] {
     align-items: center;
     padding: 24px 0;
   }
+
+  .header__logo {
+    width: 136px;
+  }
   .header__logo img {
-    max-width: 220px;
-    -webkit-transition: var(--transition);
-    transition: var(--transition);
+    width: 100%;
   }
   .header__nav-list {
     opacity: 0;
