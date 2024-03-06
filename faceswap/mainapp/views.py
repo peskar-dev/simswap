@@ -107,7 +107,7 @@ def download_photo(request, dirkey):
 
 def delete_directory(directory):
     print(directory)
-    time.sleep(180)
+    time.sleep(60)
     shutil.rmtree(directory)
 
 
