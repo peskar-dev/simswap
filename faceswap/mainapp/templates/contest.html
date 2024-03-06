@@ -1,0 +1,126 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'mainapp/css/style.css' %}" />
+    <title>VIVIENNE SABO</title>
+  </head>
+
+  <body class="body">
+    <div class="wrapper">
+      <header class="header">
+        <div class="container__header">
+          <div class="header__inner">
+            <a class="header__logo" href="/">
+              <img src="/media/mainapp/images/logo.png" alt="Лого" />
+            </a>
+            <nav class="header__nav">
+              <ul class="header__nav-list">
+                <li class="header__nav-item">
+                  <a class="header__nav-link" href="{% url 'home' %}"> Главная </a>
+                </li>
+                <li class="header__nav-item">
+                  <a class="header__nav-link" href="{% url 'uploading-photos' %}"> Создать видео </a>
+                </li>
+                <li class="header__nav-item">
+                  <a class="header__nav-link" href="{% url 'home' %}#instr"> Инструкция по созданию </a>
+                </li>
+                <li class="header__nav-item">
+                  <a class="header__nav-link" href="{% url 'competition' %}"> Условия конкурса </a>
+                </li>
+                <li class="header__nav-item">
+                  <a class="header__nav-link" href="https://www.instagram.com/viviennesabo?igsh=MWN0d3RlZzBqcGpiZQ==">
+                    Социальные сети
+                  </a>
+                </li>
+              </ul>
+            </nav>
+            <a class="burger-icon" href="#" onclick="event.preventDefault()">
+              <span></span>
+            </a>
+          </div>
+        </div>
+      </header>
+      <main class="main">
+        <section class="main__hero hero">
+          <div class="container">
+            <div class="hero__inner">
+              <h1 class="hero__title">
+                <img src="/media/mainapp/images/logo_Cabaret.svg" alt="" />
+              </h1>
+              <p class="hero__text">
+                Погрузись в волшебный мир арабской сказки. Укради сердце главного героя с помощью новой туши Cabaret Noir Arabique
+                oт Vivienne Sabó!
+              </p>
+              <a class="button" href="{% url 'uploading-photos' %}"> Создать Видео </a>
+              <div class="page">
+                <img src="/media/mainapp/images/page.svg" alt="Стрелка вниз" />
+              </div>
+            </div>
+            <div class="hero__video">
+              <video playsinline autoplay muted loop src="/media/mainapp/videos/video.mp4"></video>
+            </div>
+          </div>
+        </section>
+
+        <section id="instr" class="main__instructions instructions">
+          <div class="container">
+            <div class="instructions__inner">
+              <h4 class="instructions__title">Как создать видео?</h4>
+              <div class="image-wrapper">
+                <div class="download__img">
+                  <img src="/media/mainapp/images/download-image-couple.jpg" alt="" class="download__image" />
+                </div>
+                <div class="woman">
+                  <div class="woman-img">
+                    <img src="/media/mainapp/images/download-image-woman.jpg" alt="" class="download__image-woman" />
+                  </div>
+                </div>
+                <div class="arrow">
+                  <img src="/media/mainapp/images/arrow-photo.svg" alt="" class="download__arrow" />
+                </div>
+              </div>
+              <ul class="instructions__list">
+                <li class="instructions__item">
+                  <span>01</span>
+                  Найди в телефоне свое лучшее фото или просто сделай селфи. Важно, чтобы твое лицо было хорошо освещено и
+                  находилось в центре изображения.
+                </li>
+                <li class="instructions__item">
+                  <span>02</span>
+                  Загрузи фото и немного подожди, мы создаем видео, в котором у тебя главная роль!
+                </li>
+                <li class="instructions__item">
+                  <span>03</span>
+                  После того как видео будет готово, ты можешь сохранить его на свой телефон и отправить друзьям, или же
+                  поделиться им в социальных сетях и принять участие в нашем конкурсе!
+                </li>
+              </ul>
+              <a class="button" href="{% url 'uploading-photos' %}"> Создать Видео </a>
+            </div>
+          </div>
+        </section>
+      </main>
+      <footer class="footer">
+        <div class="container">
+          <div class="footer__inner">
+            <ul class="footer__list">
+              <li class="footer__item">
+                <a class="footer__link" href="https://www.instagram.com/viviennesabo?igsh=MWN0d3RlZzBqcGpiZQ==">
+                  Социальные сети
+                </a>
+              </li>
+              <li class="footer__item">
+                <a class="footer__link" href="#"> Политика конфиденциальности </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </footer>
+    </div>
+  </body>
+  <script src="{% static 'mainapp/js/main.js' %}"></script>
+</html>

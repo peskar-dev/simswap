@@ -84,6 +84,7 @@ def process_photo(request):
         # threading.Thread(target=cuda_render, args=(photo_path, output_path, new_video_path, gpu_device,roop_dir,), name=f'render_{gpuid}').start()
 
         return redirect("result", dirkey=dirkey)
+    return redirect("uploading_photos")
 
 
 def download_photo(request, dirkey):
