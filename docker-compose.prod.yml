@@ -32,6 +32,8 @@ services:
   frontend:
     restart: always
     image: faceswap-frontend:latest
+    ports:
+      - "8002:80"
     build:
       context: ../frontend
       dockerfile: Dockerfile
