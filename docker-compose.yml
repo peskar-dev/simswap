@@ -20,6 +20,7 @@ services:
     env_file:
       - .env
     volumes:
+      - ./faceswap:/app/
       - ./outputs/:/app/outputs/
     ports:
       - "0.0.0.0:8000:8000"
@@ -45,6 +46,7 @@ services:
     env_file:
       - .env
     volumes:
+      - ./faceswap:/app/
       - ./outputs/:/app/outputs/
     networks:
       - backend

@@ -5,6 +5,7 @@ x-celery-config: &celery-config
   env_file:
     - .env
   volumes:
+    - ./faceswap:/app/
     - ./outputs/:/app/outputs/
   networks:
     - backend
