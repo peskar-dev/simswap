@@ -71,6 +71,10 @@ def process_photo(request):
         MAIN_DIR = Path(__file__).resolve().parent.parent
         roop_dir = MAIN_DIR / "roop"
 
+        gpu = GPU.objects.order_by('counter').first()
+        gpu.counter += 1
+        gpu.save()
+
         logger.info(f"s = {photo_path}")
         logger.info(f"t = {new_video_path}")
         logger.info(f"o = {output_path}")
