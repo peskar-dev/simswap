@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "arabiquenoire"
+name = "faceswap"
 version = "0.1.0"
 description = ""
 authors = ["v.kovalchuk <v.kovalchuk@crysto.ru>"]

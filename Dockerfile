@@ -1,4 +1,6 @@
-FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04
+ARG BASE_IMAGE=python:3.10.11-slim-buster
+
+FROM nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04 as cuda
 
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -32,10 +34,19 @@ RUN git clone https://github.com/s0md3v/roop.git && \
     rm -rf roop
 
 
+FROM ${BASE_IMAGE} as python
+
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install -r requirements.txt
+RUN apt update -y && \
+    apt upgrade -y && \
+    apt install curl -y && \
+    pip install poetry==1.7.0
+
+COPY poetry* .
+COPY pyproject.toml .
+RUN poetry config virtualenvs.create false
+RUN poetry install
 
 COPY ./faceswap/ /app/
 

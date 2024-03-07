@@ -1,24 +1,53 @@
 version: "3.8"
 
 
+x-healthcheck-defaults: &healthcheck_defaults
+  interval: 10s
+  retries: 5
+  timeout: 10s
+
+networks:
+  backend:
+    driver: bridge
+
 services:
   faceswap:
     build:
       context: .
       dockerfile: Dockerfile
+      target: python
     image: faceswap:latest
     env_file:
       - .env
-    container_name: faceswap
     volumes:
       - ./faceswap/:/app/
+      - ./faceswap/inputs/:/tmp/inputs/
     ports:
-        - "0.0.0.0:8000:8000"
-    command: gunicorn faceswap/wsgi -c gunicorn.conf.py
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              count: "all"
-              capabilities: [gpu]
+      - "0.0.0.0:8000:8000"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8000/api/health/" ]
+      <<: *healthcheck_defaults
+    command: python manage.py runserver 0.0.0.0:8000
+
+  redis:
+    image: redis:7.2.4
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      <<: *healthcheck_defaults
+    networks:
+      - backend
+
+  celery:
+    image: faceswap:latest
+    env_file:
+      - .env
+    volumes:
+      - ./faceswap/:/app/
+    networks:
+      - backend
+    depends_on:
+      redis:
+        condition: service_healthy
+    command: celery -A faceswap worker -l DEBUG
