@@ -1,7 +1,6 @@
 import logging
 
-from rest_framework import exceptions
-from rest_framework import exceptions, generics, status
+from rest_framework import generics, status, exceptions
 from rest_framework.response import Response
 from rest_framework.views import APIView
 

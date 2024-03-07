@@ -69,9 +69,8 @@ def save_file(file: File) -> str:
 
 
 def create_task(file_path: str) -> AsyncResult:
-    video_instance = Video.objects.filter(show=True).first()
-    video_path = video_instance.video_file.url
     try:
+        video_path = Video.related_video_path()
         return generate_faceswap.delay(file_path, video_path)
     except (SoftTimeLimitExceeded, OperationalError):
         logger.exception("Internal server error")
