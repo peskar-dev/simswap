@@ -9,12 +9,12 @@ from celery.result import AsyncResult
 from django.core.exceptions import SuspiciousFileOperation
 from django.core.files import File
 from django.core.files.storage import FileSystemStorage
+from faceswap.celery import app as celery_app
+from faceswap.settings import BASE_DIR, redis_client
 from kombu.exceptions import OperationalError
+from mainapp.models import Video
 from rest_framework import exceptions
 
-from faceswap.celery import app as celery_app
-from faceswap.settings import redis_client, BASE_DIR
-from mainapp.models import Video
 from .tasks import generate_faceswap
 
 logger = logging.getLogger(__name__)
@@ -57,6 +57,7 @@ def save_file(file: File) -> str:
         output_dir = os.path.join(BASE_DIR, "outputs")
         os.makedirs(output_dir, exist_ok=True)
         temp_dir = tempfile.mkdtemp(dir=output_dir)
+        os.chmod(temp_dir, 0o755)
 
         fs = FileSystemStorage(location=temp_dir)
         file_name = fs.save(file.name, file)
