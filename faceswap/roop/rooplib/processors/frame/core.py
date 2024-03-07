@@ -7,8 +7,8 @@ from types import ModuleType
 from typing import Any, Callable
 
 import psutil
-from rooplib import config
-from rooplib.utilities import decode_execution_providers
+from roop.rooplib import config
+from roop.rooplib.utilities import decode_execution_providers
 from tqdm import tqdm
 
 FRAME_PROCESSORS_MODULES: list[ModuleType] = []

@@ -8,7 +8,7 @@ from pathlib import Path
 
 import onnxruntime
 import tensorflow
-from rooplib import config
+from roop.rooplib import config
 from tqdm import tqdm
 
 TEMP_DIRECTORY = "temp"

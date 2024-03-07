@@ -2,9 +2,9 @@ import threading
 
 import insightface
 import numpy
-from rooplib import config
-from rooplib.typing import Face, Frame
-from rooplib.utilities import decode_execution_providers
+from roop.rooplib import config
+from roop.rooplib.typing import Face, Frame
+from roop.rooplib.utilities import decode_execution_providers
 
 FACE_ANALYSER = None
 THREAD_LOCK = threading.Lock()

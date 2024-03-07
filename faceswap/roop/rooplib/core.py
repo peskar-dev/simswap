@@ -2,11 +2,11 @@ import shutil
 import sys
 import tempfile
 
-from rooplib import config
-from rooplib.config import frame_processors
-from rooplib.predictor import predict_video
-from rooplib.processors.frame.core import get_frame_processors_modules
-from rooplib.utilities import (
+from roop.rooplib import config
+from roop.rooplib.config import frame_processors
+from roop.rooplib.predictor import predict_video
+from roop.rooplib.processors.frame.core import get_frame_processors_modules
+from roop.rooplib.utilities import (
     create_temp,
     create_video,
     extract_frames,

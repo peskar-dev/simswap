@@ -6,7 +6,7 @@
 
 ```python
 # import the library
-from rooplib import core as lib
+from roop.rooplib import core as lib
 
 # Prepare target video:
 # 1) creates temporary directory ./temp

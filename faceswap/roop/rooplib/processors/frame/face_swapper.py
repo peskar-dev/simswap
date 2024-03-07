@@ -3,17 +3,17 @@ from typing import Any, Callable
 
 import cv2
 import insightface
-from rooplib import config
-from rooplib.core import update_status
-from rooplib.face_analyser import find_similar_face, get_one_face
-from rooplib.face_reference import (
+from roop.rooplib import config
+from roop.rooplib.core import update_status
+from roop.rooplib.face_analyser import find_similar_face, get_one_face
+from roop.rooplib.face_reference import (
     clear_face_reference,
     get_face_reference,
     set_face_reference,
 )
-from rooplib.processors.frame import core
-from rooplib.typing import Face, Frame
-from rooplib.utilities import (
+from roop.rooplib.processors.frame import core
+from roop.rooplib.typing import Face, Frame
+from roop.rooplib.utilities import (
     conditional_download,
     decode_execution_providers,
     is_image,
