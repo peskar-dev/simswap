@@ -110,7 +110,7 @@ def generate(
     create_video(gen_temp_path)
 
     update_status(f"Restore audio from source {output_path}", "ROOP.CORE")
-    restore_audio(gen_temp_path, output_path)
+    restore_audio(target_path, gen_temp_path, output_path)
 
     if is_video(output_path):
         update_status(f"Processing to video succeed!: {output_path}")

@@ -83,8 +83,8 @@ def create_video(frame_dir: str, fps: float = 30) -> bool:
     return run_ffmpeg(commands)
 
 
-def restore_audio(target_path: str, output_path: str) -> None:
-    temp_output_path = get_temp_output_path(target_path)
+def restore_audio(target_path: str, frame_dir: str, output_path: str) -> None:
+    temp_output_path = get_temp_output_path(frame_dir)
     commands = [
         "-hwaccel",
         "auto",
