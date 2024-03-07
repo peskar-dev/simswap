@@ -1,0 +1,117 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="{% static 'mainapp/css/style.css' %}" />
+    <title>VIVIENNE SABO</title>
+  </head>
+
+  <body class="body">
+    <div class="wrapper">
+      <header class="header">
+        <div class="container__header">
+          <div class="header__inner">
+            <a class="header__logo" href="/">
+              <img src="/media/mainapp/images/logo.svg" alt="Лого" />
+            </a>
+            <nav class="header__nav">
+              <ul class="header__nav-list">
+                <li class="header__nav-item">
+                  <a class="header__nav-link" href="{% url 'home' %}"> Главная </a>
+                </li>
+                <li class="header__nav-item">
+                  <a class="header__nav-link" href="{% url 'uploading-photos' %}"> Создать видео </a>
+                </li>
+                <li class="header__nav-item">
+                  <a class="header__nav-link" href="#instr"> Инструкция по созданию </a>
+                </li>
+                <li class="header__nav-item">
+                  <a class="header__nav-link" href="{% url 'competition' %}"> Условия конкурса </a>
+                </li>
+                <li class="header__nav-item">
+                  <a class="header__nav-link" href="#"> Контакты </a>
+                </li>
+              </ul>
+            </nav>
+            <a class="burger-icon" href="#" onclick="event.preventDefault()">
+              <span></span>
+            </a>
+          </div>
+        </div>
+      </header>
+      <main class="main">
+  
+        <section class="main__ready ready">
+          <div class="container">
+            <div class="ready__inner">
+              <h2 class="ready__title">
+                Твое видео готово!
+              </h2>
+              <p class="ready__text">
+                Ты выглядишь просто неотразимо!
+                Настоящая принцесса из восточной
+                сказки!
+                <br>
+                Скорее поделись им в социальных
+                сетях и принимай участие в нашем
+                конкурсе, чтобы выиграть годовой
+                запас туши Cabaret Noire Arabique!
+                Ведь с ней ресницы чернее
+                арабской ночи..
+              </p>
+              <button class="button button-viewing">Посмотреть Видео</button>
+              <button class="button button-viewing" onclick="location.href='/download_photo/{{ dirkey }}/'">Скачать видео</button>
+              <a class="button__contest" href="{% url 'competition' %}">Участвовать в конкурсе</a>
+            </div>
+        </section>
+  
+      </main>
+      <footer class="footer">
+        <div class="container">
+          <div class="footer__inner footer__inner-download">
+            <ul class="footer__list">
+              <li class="footer__item">
+                <a class="footer__link" href="#">
+                  Контактная информация
+                </a>
+              </li>
+              <li class="footer__item">
+                <a class="footer__link" href="#">
+                  Социальные сети
+                </a>
+              </li>
+              <li class="footer__item">
+                <a class="footer__link" href="#">
+                  Политика конфиденциальности
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </footer>
+    </div>
+    <div class="modal">
+      <div class="modal__window-viewing">  
+        <div class="modal__viewing-img">
+          <video controls class="modal__video">
+            <source src="/outputs/{{ dirkey }}/result.mp4" type="video/mp4">
+          </video>
+          <div class="modal__cancel">
+            <svg width="11" height="11" viewBox="0 0 11 11" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M1 1L10 10M1 10L10 1" stroke="black" />
+            </svg>
+          </div>
+        </div>
+        <button class="button button-download">Скачать Видео</button>
+        <a class="button__contest" href="{% url 'competition' %}">Участвовать в конкурсе</a>
+      </div>
+    </div>
+  
+  </body>
+
+  <script src="{% static 'mainapp/js/main.js' %}"></script>
+  <!-- <script src="{% static 'mainapp/js/modal.js' %}"></script> -->
+</html>
