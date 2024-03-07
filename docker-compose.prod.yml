@@ -2,6 +2,7 @@ version: "3.7"
 
 x-celery-config: &celery-config
   image: faceswap:latest
+  restart: always
   env_file:
     - .env
   volumes:
@@ -18,6 +19,7 @@ x-celery-config: &celery-config
 
 services:
   faceswap:
+    restart: always
     volumes:
       - ./outputs/:/app/outputs/
     build:
@@ -26,6 +28,15 @@ services:
       args:
         BASE_IMAGE: cuda
     command: gunicorn faceswap.wsgi -c gunicorn.conf.py
+
+  frontend:
+    restart: always
+    image: faceswap-frontend:latest
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL}
 
   celery:
     <<: *celery-config
