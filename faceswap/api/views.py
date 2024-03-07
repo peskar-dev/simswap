@@ -1,16 +1,17 @@
 import logging
 
-from rest_framework import generics, status, exceptions
+from rest_framework import exceptions, generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
 from .serializers import ImageUploadSerializer
-from .utils import get_task_position, save_file, create_task
+from .utils import create_task, get_task_position, save_file
 
 logger = logging.getLogger(__name__)
 
 
 class ImageUploadView(generics.CreateAPIView):
+    authentication_classes = []
     serializer_class = ImageUploadSerializer
 
     def create(self, request, *args, **kwargs) -> Response:
@@ -25,6 +26,8 @@ class ImageUploadView(generics.CreateAPIView):
 
 
 class TaskStatusView(generics.RetrieveAPIView):
+    authentication_classes = []
+
     def retrieve(self, request, *args, **kwargs):
         task_id = kwargs.get("task_id")
         task_status = get_task_position(task_id)
