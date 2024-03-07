@@ -23,7 +23,7 @@ services:
       dockerfile: Dockerfile
       args:
         BASE_IMAGE: cuda
-    command: gunicorn faceswap/wsgi -c gunicorn.conf.py
+    command: gunicorn faceswap.wsgi -c gunicorn.conf.py
 
   celery:
     <<: *celery-config

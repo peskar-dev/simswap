@@ -23,7 +23,7 @@ services:
       - ./faceswap:/app/
       - ./outputs/:/app/outputs/
     ports:
-      - "0.0.0.0:8000:8000"
+      - "0.0.0.0:8001:8000"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8000/api/health/" ]
       <<: *healthcheck_defaults
