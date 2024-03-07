@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 class Roop:
     @staticmethod
     def run(file_path: str, video_path: str, output_path: str):
-        time.sleep(10)
+        time.sleep(20)
         logger.debug(
             f"Running Roop.run with file_path={file_path}, "
             f"video_path={video_path}, "

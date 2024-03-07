@@ -38,6 +38,9 @@ def get_task_position(task_id: str) -> TaskStatusDict | None:
         )
         if file_path and not os.path.exists(file_path):
             return None
+        file_path = str(
+            os.path.relpath(str(file_path), f"{BASE_DIR}/outputs")
+        )
         return {"queue": None, "status": task_status, "file_path": file_path}
 
     for index, task_payload in enumerate(
