@@ -22,6 +22,8 @@ services:
     volumes:
       - ./faceswap:/app/
       - ./outputs/:/app/outputs/
+      - ./tmp/.insightface:/root/.insightface
+      - ./tmp/.opennsfw2:/root/.opennsfw2
     ports:
       - "0.0.0.0:8001:8000"
     healthcheck:
