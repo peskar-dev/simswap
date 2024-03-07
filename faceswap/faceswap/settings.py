@@ -14,6 +14,7 @@ import os
 from pathlib import Path
 
 import sentry_sdk
+from redis import Redis
 from sentry_sdk.integrations.celery import CeleryIntegration
 from sentry_sdk.integrations.django import DjangoIntegration
 from sentry_sdk.integrations.redis import RedisIntegration
@@ -24,6 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
+ENVIRONMENT = os.getenv("ENVIRONMENT", "dev")
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.getenv("SECRET_KEY", "my_secret")
@@ -48,6 +50,8 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "mainapp.apps.MainappConfig",
+    "rest_framework",
+    "api",
 ]
 
 MIDDLEWARE = [
@@ -163,3 +167,14 @@ LOGGING = {
         "level": os.getenv("LOG_LEVEL", "DEBUG"),
     },
 }
+
+
+# Celery
+REDIS_URL = os.getenv("REDIS_HOST", "localhost")
+REDIS_PORT = os.getenv("REDIS_PORT", 6379)
+REDIS_DB = os.getenv("REDIS_DB", 0)
+CELERY_BROKER_URL = f"redis://{REDIS_URL}:{REDIS_PORT}"
+CELERY_RESULT_BACKEND = f"redis://{REDIS_URL}:{REDIS_PORT}"
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
+
+redis_client = Redis(host=REDIS_URL, port=REDIS_PORT, db=REDIS_DB)

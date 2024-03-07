@@ -8,10 +8,15 @@
       <env name="ALLOWED_HOSTS" value="localhost" />
       <env name="CSRF_TRUSTED_ORIGINS" value="http://*" />
       <env name="DEBUG" value="1" />
+      <env name="ENVIRONMENT" value="dev" />
+      <env name="LOG_LEVEL" value="DEBUG" />
       <env name="PYTHONUNBUFFERED" value="1" />
+      <env name="REDIS_DB" value="0" />
+      <env name="REDIS_HOST" value="redis" />
+      <env name="REDIS_PASSWORD" value="password" />
+      <env name="REDIS_PORT" value="6379" />
       <env name="SECRET_KEY" value="secret" />
       <env name="SENTRY_DSN_URL" value="" />
-      <env name="DJANGO_SETTINGS_MODULE" value="faceswap.settings" />
     </envs>
     <option name="SDK_HOME" value="" />
     <option name="SDK_NAME" value="Poetry (arabiquenoire)" />

@@ -9,6 +9,11 @@ class Video(models.Model):
     def __str__(self):
         return self.title
 
+    @classmethod
+    def related_video_path(cls) -> str:
+        video_instance = cls.objects.filter(show=True).first()
+        return video_instance.video_file.path
+
 
 class Image(models.Model):
     title = models.CharField(max_length=200)

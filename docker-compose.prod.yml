@@ -1,0 +1,54 @@
+version: "3.7"
+
+x-celery-config: &celery-config
+  image: faceswap:latest
+  env_file:
+    - .env
+  volumes:
+    - ./outputs/:/tmp/outputs/
+    - ./faceswap/:/app/
+  networks:
+    - backend
+  depends_on:
+    redis:
+      condition: service_healthy
+  command: celery -A faceswap worker -l INFO
+
+services:
+  faceswap:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        BASE_IMAGE: cuda
+    command: gunicorn faceswap/wsgi -c gunicorn.conf.py
+
+  celery:
+    <<: *celery-config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]
+
+  celery-2:
+    <<: *celery-config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['1']
+              capabilities: [gpu]
+
+  celery-3:
+    <<: *celery-config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['2']
+              capabilities: [gpu]
