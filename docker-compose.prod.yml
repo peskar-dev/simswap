@@ -5,8 +5,7 @@ x-celery-config: &celery-config
   env_file:
     - .env
   volumes:
-    - ./outputs/:/tmp/outputs/
-    - ./faceswap/:/app/
+    - ./outputs/:/app/outputs/
   networks:
     - backend
   depends_on:
@@ -16,6 +15,8 @@ x-celery-config: &celery-config
 
 services:
   faceswap:
+    volumes:
+      - ./outputs/:/app/outputs/
     build:
       context: .
       dockerfile: Dockerfile

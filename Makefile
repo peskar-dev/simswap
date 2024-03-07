@@ -8,10 +8,10 @@ down:
 	docker compose down
 
 build_prod:
-	docker compose -f docker-compose.prod.yml build
+	docker compose -f docker-compose.yml -f docker-compose.prod.yml build
 
 up_prod:
-	docker compose -f docker-compose.prod.yml up -d
+	docker compose -f docker-compose.yml -f docker-compose.prod.yml up -d
 
 down_prod:
-	docker compose -f docker-compose.prod.yml down
+	docker compose -f docker-compose.yml -f docker-compose.prod.yml down

@@ -20,13 +20,14 @@ services:
     env_file:
       - .env
     volumes:
-      - ./faceswap/:/app/
-      - ./faceswap/inputs/:/tmp/inputs/
+      - ./outputs/:/app/outputs/
     ports:
       - "0.0.0.0:8000:8000"
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:8000/api/health/" ]
       <<: *healthcheck_defaults
+    networks:
+      - backend
     command: python manage.py runserver 0.0.0.0:8000
 
   redis:
@@ -44,7 +45,7 @@ services:
     env_file:
       - .env
     volumes:
-      - ./faceswap/:/app/
+      - ./outputs/:/app/outputs/
     networks:
       - backend
     depends_on:
