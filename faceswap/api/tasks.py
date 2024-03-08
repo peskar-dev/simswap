@@ -6,6 +6,7 @@ from celery import states
 
 from faceswap.celery import app
 from faceswap.settings import ENVIRONMENT
+from mainapp.models import VideoGenerationCount
 
 if ENVIRONMENT == "production":
     import roop
@@ -59,3 +60,4 @@ def generate_faceswap(self, file_path: str, video_path: str):
             state=states.SUCCESS,
             meta={"file_path": output_path},
         )
+        VideoGenerationCount.increment_count()

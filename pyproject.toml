@@ -14,6 +14,7 @@ gunicorn = "^21.2.0"
 celery = {extras = ["redis"], version = "^5.3.6"}
 pillow = "^10.2.0"
 django-cors-headers = "^4.3.1"
+orjson = "^3.9.15"
 
 
 [tool.poetry.group.dev.dependencies]

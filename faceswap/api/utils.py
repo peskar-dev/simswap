@@ -1,9 +1,9 @@
-import json
 import logging
 import os
 import tempfile
 from typing import TypedDict, Union
 
+import orjson
 from billiard.exceptions import SoftTimeLimitExceeded
 from celery.result import AsyncResult
 from django.core.exceptions import SuspiciousFileOperation
@@ -65,7 +65,7 @@ def handle_pending(task: AsyncResult) -> TaskStatusDict | None:
 
     queue: int = len(reserved_tasks)
     for raw_task_payload in reversed(redis_client.lrange("celery", 0, -1)):
-        task_payload = json.loads(raw_task_payload)
+        task_payload = orjson.loads(raw_task_payload)
         if task_payload["headers"]["task"] == "api.tasks.generate_faceswap":
             queue += 1
         if task_payload["headers"]["id"] == task.id:
