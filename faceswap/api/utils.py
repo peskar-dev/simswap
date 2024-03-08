@@ -2,19 +2,19 @@ import json
 import logging
 import os
 import tempfile
-from typing import TypedDict
+from typing import TypedDict, Union
 
 from billiard.exceptions import SoftTimeLimitExceeded
 from celery.result import AsyncResult
 from django.core.exceptions import SuspiciousFileOperation
 from django.core.files import File
 from django.core.files.storage import FileSystemStorage
-from faceswap.celery import app as celery_app
-from faceswap.settings import BASE_DIR, redis_client
 from kombu.exceptions import OperationalError
-from mainapp.models import Video
 from rest_framework import exceptions
 
+from faceswap.celery import app as celery_app
+from faceswap.settings import BASE_DIR, redis_client
+from mainapp.models import Video
 from .tasks import generate_faceswap
 
 logger = logging.getLogger(__name__)
@@ -31,28 +31,62 @@ def get_task_position(task_id: str) -> TaskStatusDict | None:
     task_status = str(task.status).lower()
 
     if task_status in ("in_progress", "success"):
-        file_path = (
-            task.result.get("file_path")
-            if task.result and task_status == "success"
-            else None
-        )
-        if file_path and not os.path.exists(file_path):
+        return handle_in_progress_or_success(task, task_status)
+
+    if task_status == "pending":
+        return handle_pending(task)
+
+    return None
+
+
+def handle_in_progress_or_success(
+    task: AsyncResult, task_status: str
+) -> TaskStatusDict | None:
+    if task.ready():
+        file_path = task.result.get("file_path")
+        if not os.path.exists(file_path):
             return None
         file_path = str(
             os.path.relpath(str(file_path), f"{BASE_DIR}/outputs")
         )
-        return {"queue": None, "status": task_status, "file_path": file_path}
+    else:
+        file_path = None
+    return {"queue": None, "status": task_status, "file_path": file_path}
 
-    for index, task_payload in enumerate(
-        reversed(redis_client.lrange("celery", 0, -1))
-    ):
-        if json.loads(task_payload)["headers"]["id"] == task.id:
+
+def handle_pending(task: AsyncResult) -> TaskStatusDict | None:
+    reserved_tasks = get_reserved_tasks()
+    if task.id in reserved_tasks:
+        return {
+            "queue": reserved_tasks[task.id] + 1,
+            "status": "pending",
+            "file_path": None,
+        }
+
+    queue: int = len(reserved_tasks)
+    for raw_task_payload in reversed(redis_client.lrange("celery", 0, -1)):
+        task_payload = json.loads(raw_task_payload)
+        if task_payload["headers"]["task"] == "api.tasks.generate_faceswap":
+            queue += 1
+        if task_payload["headers"]["id"] == task.id:
             return {
-                "queue": index + 1,
+                "queue": queue,
                 "status": "pending",
                 "file_path": None,
             }
-    return None
+
+
+def get_reserved_tasks() -> dict[str, int]:
+    inspect = celery_app.control.inspect()
+    reserved = inspect.reserved()
+    reserved_dict: dict[str, int] = {}
+    for _, reserved_tasks in reserved.items():
+        for reserved_task in reserved_tasks:
+            if reserved_task["name"] == "api.tasks.generate_faceswap":
+                reserved_dict[reserved_task["id"]] = reserved_tasks.index(
+                    reserved_task
+                )
+    return reserved_dict
 
 
 def save_file(file: File) -> str:
