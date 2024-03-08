@@ -1,6 +1,28 @@
 from django.db import models
 
 
+class VideoGenerationCount(models.Model):
+    count = models.IntegerField(default=0)
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        pass
+
+    @classmethod
+    def load(cls):
+        obj, created = cls.objects.get_or_create(pk=1)
+        return obj
+
+    @classmethod
+    def increment_count(cls):
+        obj = cls.load()
+        obj.count += 1
+        obj.save()
+
+
 class Video(models.Model):
     title = models.CharField(max_length=200)
     video_file = models.FileField(upload_to="videos/")
