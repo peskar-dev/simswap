@@ -69,3 +69,13 @@ services:
             - driver: nvidia
               device_ids: ['2']
               capabilities: [gpu]
+
+  celery-4:
+    <<: *celery-config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['3']
+              capabilities: [gpu]
