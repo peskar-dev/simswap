@@ -1,5 +1,7 @@
+import os
+
 execution_providers = ["cuda", "coreml"]
-execution_threads = 30
+execution_threads = int(os.getenv("EXECUTION_THREADS", 10))
 fps = 30
 frame_processors = ["face_swapper"]
 log_level = "error"
