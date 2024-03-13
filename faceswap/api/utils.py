@@ -78,8 +78,9 @@ def handle_pending(task: AsyncResult) -> TaskStatusDict | None:
 
 def get_reserved_tasks() -> dict[str, int]:
     inspect = celery_app.control.inspect()
-    reserved = inspect.reserved()
     reserved_dict: dict[str, int] = {}
+    if not (reserved := inspect.reserved()):
+        return reserved_dict
     for _, reserved_tasks in reserved.items():
         for reserved_task in reserved_tasks:
             if reserved_task["name"] == "api.tasks.generate_faceswap":
