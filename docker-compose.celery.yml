@@ -23,72 +23,72 @@ services:
               device_ids: ['0']
               capabilities: [gpu]
 
-  celery-2:
-    <<: *celery-config
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: ['1']
-              capabilities: [gpu]
-
-  celery-3:
-    <<: *celery-config
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: ['2']
-              capabilities: [gpu]
-
-  celery-4:
-    <<: *celery-config
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: ['3']
-              capabilities: [gpu]
-
-  celery-5:
-    <<: *celery-config
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: ['4']
-              capabilities: [gpu]
-
-  celery-6:
-    <<: *celery-config
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: ['5']
-              capabilities: [gpu]
-
-  celery-7:
-    <<: *celery-config
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: ['6']
-              capabilities: [gpu]
-
-  celery-8:
-    <<: *celery-config
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: ['7']
-              capabilities: [gpu]
+#  celery-2:
+#    <<: *celery-config
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              device_ids: ['1']
+#              capabilities: [gpu]
+#
+#  celery-3:
+#    <<: *celery-config
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              device_ids: ['2']
+#              capabilities: [gpu]
+#
+#  celery-4:
+#    <<: *celery-config
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              device_ids: ['3']
+#              capabilities: [gpu]
+#
+#  celery-5:
+#    <<: *celery-config
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              device_ids: ['4']
+#              capabilities: [gpu]
+#
+#  celery-6:
+#    <<: *celery-config
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              device_ids: ['5']
+#              capabilities: [gpu]
+#
+#  celery-7:
+#    <<: *celery-config
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              device_ids: ['6']
+#              capabilities: [gpu]
+#
+#  celery-8:
+#    <<: *celery-config
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              device_ids: ['7']
+#              capabilities: [gpu]
