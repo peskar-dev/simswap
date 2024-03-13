@@ -9,8 +9,8 @@ x-celery-config: &celery-config
     - ./faceswap:/app/
     - ./outputs/:/app/outputs/
     - /mnt/share/faceswap:/app/outputs/
-    - ./tmp/.insightface:/root/.insightface
-    - ./tmp/.opennsfw2:/root/.opennsfw2
+    - ../tmp/.insightface:/root/.insightface
+    - ../tmp/.opennsfw2:/root/.opennsfw2
   networks:
     - backend
   depends_on:
