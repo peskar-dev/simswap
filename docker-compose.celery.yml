@@ -1,5 +1,9 @@
 version: "3.7"
 
+networks:
+  backend:
+    driver: bridge
+
 x-celery-config: &celery-config
   image: faceswap:latest
   restart: always
