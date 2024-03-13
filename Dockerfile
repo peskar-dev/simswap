@@ -24,7 +24,7 @@ RUN apt update -y && apt upgrade -y && \
     update-alternatives --install /usr/bin/pip3 pip3 /usr/local/bin/pip3.10 0 && \
     rm -rf /var/lib/apt/lists/*
 
-COPY ../inswapper_128.onnx /tmp/inswapper_128.onnx
+COPY inswapper_128.onnx /tmp/inswapper_128.onnx
 
 RUN git clone https://github.com/s0md3v/roop.git && \
     cd roop && mkdir -p models && cp /tmp/inswapper_128.onnx ./models && \
