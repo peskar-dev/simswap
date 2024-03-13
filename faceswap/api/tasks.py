@@ -3,7 +3,6 @@ import os
 import shutil
 
 from celery import states
-
 from faceswap.celery import app
 from faceswap.settings import ENVIRONMENT
 from mainapp.models import VideoGenerationCount
@@ -43,6 +42,9 @@ def generate_faceswap(self, file_path: str, video_path: str):
     if not os.path.exists(file_path):
         logger.error(f"File not found: {file_path}")
         raise FileNotFoundError(f"File not found: {file_path}")
+    if not os.path.exists(video_path):
+        logger.error(f"File not found: {video_path}")
+        raise FileNotFoundError(f"File not found: {video_path}")
     logger.info(f"Processing file: {file_path}")
     self.update_state(state="in_progress")
 
