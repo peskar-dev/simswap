@@ -1,0 +1,99 @@
+version: "3.7"
+
+x-celery-config: &celery-config
+  image: faceswap:latest
+  restart: always
+  env_file:
+    - .env
+  volumes:
+    - ./faceswap:/app/
+    - /mnt/share/faceswap/outputs/:/app/outputs/
+    - ./tmp/.insightface:/root/.insightface
+    - ./tmp/.opennsfw2:/root/.opennsfw2
+  networks:
+    - backend
+  depends_on:
+    redis:
+      condition: service_healthy
+  command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO
+
+services:
+  celery-1:
+    <<: *celery-config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]
+
+  celery-2:
+    <<: *celery-config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['1']
+              capabilities: [gpu]
+
+  celery-3:
+    <<: *celery-config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['2']
+              capabilities: [gpu]
+
+  celery-4:
+    <<: *celery-config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['3']
+              capabilities: [gpu]
+
+  celery-5:
+    <<: *celery-config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['4']
+              capabilities: [gpu]
+
+  celery-6:
+    <<: *celery-config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['5']
+              capabilities: [gpu]
+
+  celery-7:
+    <<: *celery-config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['6']
+              capabilities: [gpu]
+
+  celery-8:
+    <<: *celery-config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['7']
+              capabilities: [gpu]
