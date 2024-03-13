@@ -15,7 +15,7 @@ x-celery-config: &celery-config
   depends_on:
     redis:
       condition: service_healthy
-  command: celery -A faceswap worker -l INFO
+  command: celery -A faceswap worker --concurrency={CELERY_WORKERS} -l INFO
 
 services:
   faceswap:
@@ -40,7 +40,7 @@ services:
       args:
         VITE_API_URL: ${VITE_API_URL}
 
-  celery:
+  celery-1:
     <<: *celery-config
     deploy:
       resources:

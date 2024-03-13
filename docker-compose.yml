@@ -43,7 +43,7 @@ services:
     networks:
       - backend
 
-  celery:
+  celery-1:
     image: faceswap:latest
     env_file:
       - .env
