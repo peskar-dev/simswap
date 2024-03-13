@@ -1,9 +1,5 @@
 version: "3.7"
 
-networks:
-  backend:
-    driver: bridge
-
 x-celery-config: &celery-config
   image: faceswap:latest
   restart: always
@@ -14,11 +10,6 @@ x-celery-config: &celery-config
     - /mnt/share/faceswap/outputs/:/app/outputs/
     - ../tmp/.insightface:/root/.insightface
     - ../tmp/.opennsfw2:/root/.opennsfw2
-  networks:
-    - backend
-  depends_on:
-    redis:
-      condition: service_healthy
   command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO
 
 services:
