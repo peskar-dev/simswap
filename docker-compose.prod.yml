@@ -8,6 +8,7 @@ x-celery-config: &celery-config
   volumes:
     - ./faceswap:/app/
     - ./outputs/:/app/outputs/
+    - /mnt/share/faceswap:/app/outputs/
     - ./tmp/.insightface:/root/.insightface
     - ./tmp/.opennsfw2:/root/.opennsfw2
   networks:
@@ -21,7 +22,7 @@ services:
   faceswap:
     restart: always
     volumes:
-      - ./outputs/:/app/outputs/
+      - /mnt/share/faceswap:/app/outputs/
     build:
       context: .
       dockerfile: Dockerfile
