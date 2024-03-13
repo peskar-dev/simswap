@@ -80,8 +80,3 @@ services:
             - driver: nvidia
               device_ids: ['3']
               capabilities: [gpu]
-  flower:
-    image: mher/flower:0.9.7
-    command: ['flower', '--broker=redis://${REDIS_HOST}:${REDIS_PORT}', '--port=5555']
-    ports:
-      - "0.0.0.0:5557:5555"

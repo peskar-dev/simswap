@@ -63,3 +63,19 @@ services:
       redis:
         condition: service_healthy
     command: celery -A faceswap worker -l DEBUG
+
+  flower:
+    image: faceswap:latest
+    restart: always
+    depends_on:
+      redis:
+        condition: service_healthy
+    networks:
+      - backend
+    env_file:
+      - .env
+    volumes:
+        - ./faceswap:/app/
+    ports:
+      - "5557:5555"
+    command: celery -A faceswap flower --port=5555
