@@ -39,7 +39,7 @@ COPY pyproject.toml .
 COPY faceswap/roop/requirements.txt .
 RUN poetry config virtualenvs.create false
 RUN poetry install
-RUN pip install requirements.txt
+RUN pip install -r requirements.txt
 
 COPY ./faceswap/ /app/
 
