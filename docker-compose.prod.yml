@@ -22,7 +22,7 @@ services:
   faceswap:
     restart: always
     volumes:
-      - /mnt/share/faceswap:/app/outputs/
+      - /mnt/share/faceswap/outputs/:/app/outputs/
     build:
       context: .
       dockerfile: Dockerfile
