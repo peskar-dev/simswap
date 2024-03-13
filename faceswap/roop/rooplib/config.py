@@ -1,5 +1,5 @@
 execution_providers = ["cuda", "coreml"]
-execution_threads = 60
+execution_threads = 30
 fps = 30
 frame_processors = ["face_swapper"]
 log_level = "error"
