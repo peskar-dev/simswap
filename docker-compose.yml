@@ -10,6 +10,9 @@ networks:
   backend:
     driver: bridge
 
+volumes:
+  redis_data:
+
 services:
   faceswap:
     build:
@@ -37,6 +40,8 @@ services:
     image: redis:7.2.4
     environment:
       REDIS_PASSWORD: ${REDIS_PASSWORD}
+    volumes:
+      - redis_data:/data
     ports:
       - "192.168.80.198:6379:6379"
     healthcheck:
