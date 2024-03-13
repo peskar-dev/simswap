@@ -24,15 +24,6 @@ RUN apt update -y && apt upgrade -y && \
     update-alternatives --install /usr/bin/pip3 pip3 /usr/local/bin/pip3.10 0 && \
     rm -rf /var/lib/apt/lists/*
 
-COPY inswapper_128.onnx /tmp/inswapper_128.onnx
-
-RUN git clone https://github.com/s0md3v/roop.git && \
-    cd roop && mkdir -p models && cp /tmp/inswapper_128.onnx ./models && \
-    git reset --hard c2d1feb17a9c51061b52cae5897136528f3b80cc && \
-    pip install -r requirements.txt && \
-    python run.py -s 1 -t 2 -o 3 && \
-    rm -rf roop
-
 
 FROM ${BASE_IMAGE} as python
 
@@ -45,8 +36,10 @@ RUN apt update -y && \
 
 COPY poetry* .
 COPY pyproject.toml .
+COPY faceswap/roop/requirements.txt .
 RUN poetry config virtualenvs.create false
 RUN poetry install
+RUN pip install requirements.txt
 
 COPY ./faceswap/ /app/
 
