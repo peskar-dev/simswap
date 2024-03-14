@@ -96,7 +96,7 @@ def save_file(file: File) -> str:
         os.chmod(temp_dir, 0o755)
 
         fs = FileSystemStorage(location=temp_dir)
-        file_name = fs.save(f"image.${file.name.split('.')[-1]}", file)
+        file_name = fs.save(f"image.{file.name.split('.')[-1]}", file)
 
         return fs.path(file_name)
     except SuspiciousFileOperation:
