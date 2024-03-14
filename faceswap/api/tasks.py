@@ -53,9 +53,9 @@ def generate_faceswap(self, file_path: str, video_path: str):
     output_path = os.path.join(dir_name, "output.mp4")
     try:
         roop.run(file_path, video_path, output_path)
-    except Exception:
+    except Exception as exc:
         logger.exception(f"Error processing file: {file_path}")
-        raise
+        raise self.retry(exc=exc)
     finally:
         delete_dir.apply_async(args=[dir_name], countdown=60)
         self.update_state(
