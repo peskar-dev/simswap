@@ -43,10 +43,10 @@ EXPOSE 8000
 
 FROM python AS dev
 
-RUN poetry install --with dev
+RUN poetry install --with dev --without roop
 COPY ./faceswap/ /app/
 
 FROM python AS prod
 
-RUN poetry install --with roop
+RUN poetry install --with roop --without roop
 COPY ./faceswap/ /app/
