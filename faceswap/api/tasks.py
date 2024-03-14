@@ -2,6 +2,7 @@ import logging
 import os
 import shutil
 import signal
+import time
 
 from celery import states
 from celery.exceptions import MaxRetriesExceededError
@@ -45,10 +46,6 @@ def generate_faceswap(self, file_path: str, video_path: str):
     Generate a faceswap from a photo and a video.
     Then delete
     """
-    if os.path.exists(f"/tmp/shutdown_worker_{os.getpid()}"):
-        logger.info("Worker marked for shutdown, terminating...")
-        os.remove(f"/tmp/shutdown_worker_{os.getpid()}")
-        os.kill(os.getpid(), signal.SIGTERM)
 
     if not os.path.exists(file_path):
         logger.error(f"File not found: {file_path}")
@@ -64,11 +61,10 @@ def generate_faceswap(self, file_path: str, video_path: str):
     output_path = os.path.join(dir_name, "output.mp4")
     try:
         roop.run(file_path, video_path, output_path)
-    except (OnnxFail, OnnxRuntimeException) as exc:
-        logger.exception(f"OnnxFail processing file: {file_path}")
-        with open(f"/tmp/shutdown_worker_{os.getpid()}", "w") as f:
-            f.write("shutdown")
-        self.retry(exc=exc, countdown=60)  # retry after 60 seconds
+    except (OnnxFail, OnnxRuntimeException):
+        logger.error(f"OnnxFail processing file: {file_path}")
+        os.kill(os.getpid(), signal.SIGTERM)
+        time.sleep(10)
     except Exception as exc:
         if str(exc) == "Face not found on source image":
             logger.warning(f"Face not found")
