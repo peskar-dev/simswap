@@ -48,5 +48,5 @@ COPY ./faceswap/ /app/
 
 FROM python AS prod
 
-RUN poetry install --with roop --without roop
+RUN poetry install --with roop --without dev
 COPY ./faceswap/ /app/
