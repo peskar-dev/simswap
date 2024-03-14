@@ -18,8 +18,8 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-      target: python
-    image: faceswap:latest
+      target: dev
+    image: faceswap:latest-dev
     env_file:
       - .env
     volumes:
@@ -51,7 +51,7 @@ services:
       - backend
 
   celery-1:
-    image: faceswap:latest
+    image: faceswap:latest-dev
     env_file:
       - .env
     volumes:
@@ -65,7 +65,7 @@ services:
     command: celery -A faceswap worker -l DEBUG
 
   flower:
-    image: faceswap:latest
+    image: faceswap:latest-dev
     restart: always
     depends_on:
       redis:

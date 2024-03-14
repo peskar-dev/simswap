@@ -20,11 +20,13 @@ x-celery-config: &celery-config
 services:
   faceswap:
     restart: always
+    image: faceswap:latest
     volumes:
       - /mnt/share/faceswap/outputs/:/app/outputs/
     build:
       context: .
       dockerfile: Dockerfile
+      target: prod
       args:
         BASE_IMAGE: cuda
     command: gunicorn faceswap.wsgi -c gunicorn.conf.py
@@ -39,6 +41,9 @@ services:
       dockerfile: Dockerfile
       args:
         VITE_API_URL: ${VITE_API_URL}
+
+  flower:
+    image: faceswap:latest
 
   celery-1:
     <<: *celery-config

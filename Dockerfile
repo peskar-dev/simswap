@@ -36,13 +36,17 @@ RUN apt update -y && \
 
 COPY poetry* .
 COPY pyproject.toml .
-COPY faceswap/roop/requirements.txt .
 RUN poetry config virtualenvs.create false
-RUN poetry install
-RUN pip install -r requirements.txt
-
-COPY ./faceswap/ /app/
+RUN poetry install --only main
 
 EXPOSE 8000
 
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+FROM python AS dev
+
+RUN poetry install --with dev
+COPY ./faceswap/ /app/
+
+FROM python AS prod
+
+RUN poetry install --with roop
+COPY ./faceswap/ /app/
