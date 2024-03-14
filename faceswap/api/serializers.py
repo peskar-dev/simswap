@@ -9,6 +9,7 @@ class ImageUploadSerializer(serializers.Serializer):
             "png",
             "jpeg",
             "jpg",
+            "mpo",
         ]:
             raise serializers.ValidationError(
                 f"Invalid file format. Only PNG, JPEG and JPG are supported. "
