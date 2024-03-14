@@ -1,5 +1,5 @@
 bind = "0.0.0.0:8000"
-workers = 4
+workers = 16
 accesslog = "-"
 errorlog = "-"
 access_log_format = '%(t)s "%(r)s" %(s)s'

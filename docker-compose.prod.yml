@@ -45,49 +45,49 @@ services:
   flower:
     image: faceswap:latest
 
-  celery-1:
-    <<: *celery-config
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: ['0']
-              capabilities: [gpu]
-    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-1@${HOSTNAME} -Ofair
-
-  celery-2:
-    <<: *celery-config
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: ['1']
-              capabilities: [gpu]
-    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-2@${HOSTNAME} -Ofair
-
-  celery-3:
-    <<: *celery-config
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: ['2']
-              capabilities: [gpu]
-    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-3@${HOSTNAME} -Ofair
-
-  celery-4:
-    <<: *celery-config
-    deploy:
-      resources:
-        reservations:
-          devices:
-            - driver: nvidia
-              device_ids: ['3']
-              capabilities: [gpu]
-    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-4@${HOSTNAME} -Ofair
+#  celery-1:
+#    <<: *celery-config
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              device_ids: ['0']
+#              capabilities: [gpu]
+#    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-1@${HOSTNAME} -Ofair
+#
+#  celery-2:
+#    <<: *celery-config
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              device_ids: ['1']
+#              capabilities: [gpu]
+#    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-2@${HOSTNAME} -Ofair
+#
+#  celery-3:
+#    <<: *celery-config
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              device_ids: ['2']
+#              capabilities: [gpu]
+#    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-3@${HOSTNAME} -Ofair
+#
+#  celery-4:
+#    <<: *celery-config
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              device_ids: ['3']
+#              capabilities: [gpu]
+#    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-4@${HOSTNAME} -Ofair
 
   celery-5:
     <<: *celery-config
