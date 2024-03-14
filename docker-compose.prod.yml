@@ -16,7 +16,6 @@ x-celery-config: &celery-config
   depends_on:
     redis:
       condition: service_healthy
-  command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO
 
 services:
   faceswap:
@@ -50,6 +49,7 @@ services:
             - driver: nvidia
               device_ids: ['0']
               capabilities: [gpu]
+    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-1@${HOSTNAME}
 
   celery-2:
     <<: *celery-config
@@ -60,6 +60,7 @@ services:
             - driver: nvidia
               device_ids: ['1']
               capabilities: [gpu]
+    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-2@${HOSTNAME}
 
   celery-3:
     <<: *celery-config
@@ -70,6 +71,7 @@ services:
             - driver: nvidia
               device_ids: ['2']
               capabilities: [gpu]
+    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-3@${HOSTNAME}
 
   celery-4:
     <<: *celery-config
@@ -80,3 +82,4 @@ services:
             - driver: nvidia
               device_ids: ['3']
               capabilities: [gpu]
+    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-4@${HOSTNAME}
