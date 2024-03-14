@@ -4,6 +4,7 @@ import shutil
 import signal
 
 from celery import states
+from celery.exceptions import MaxRetriesExceededError
 from faceswap.celery import app
 from faceswap.settings import ENVIRONMENT
 from mainapp.models import VideoGenerationCount
@@ -44,6 +45,11 @@ def generate_faceswap(self, file_path: str, video_path: str):
     Generate a faceswap from a photo and a video.
     Then delete
     """
+    if os.path.exists(f"/tmp/shutdown_worker_{os.getpid()}"):
+        logger.info("Worker marked for shutdown, terminating...")
+        os.remove(f"/tmp/shutdown_worker_{os.getpid()}")
+        os.kill(os.getpid(), signal.SIGTERM)
+
     if not os.path.exists(file_path):
         logger.error(f"File not found: {file_path}")
         raise FileNotFoundError(f"File not found: {file_path}")
@@ -60,8 +66,13 @@ def generate_faceswap(self, file_path: str, video_path: str):
         roop.run(file_path, video_path, output_path)
     except (OnnxFail, OnnxRuntimeException) as exc:
         logger.exception(f"OnnxFail processing file: {file_path}")
-        self.retry(exc=exc)
-        os.kill(os.getpid(), signal.SIGTERM)
+        try:
+            self.retry(exc=exc, countdown=60)  # retry after 60 seconds
+        except MaxRetriesExceededError:
+            # Mark the worker for shutdown before the final retry attempt
+            with open(f"/tmp/shutdown_worker_{os.getpid()}", "w") as f:
+                f.write("shutdown")
+            raise  # re-raise the exception to ensure the task is marked as failed
     except Exception as exc:
         if str(exc) == "Face not found on source image":
             logger.warning(f"Face not found")
