@@ -1,6 +1,7 @@
 import logging
 import os
 import shutil
+import signal
 
 from celery import states
 from faceswap.celery import app
@@ -60,7 +61,7 @@ def generate_faceswap(self, file_path: str, video_path: str):
     except (OnnxFail, OnnxRuntimeException) as exc:
         logger.exception(f"OnnxFail processing file: {file_path}")
         self.retry(exc=exc)
-        os._exit(os.EX_OSERR)
+        os.kill(os.getpid(), signal.SIGTERM)
     except Exception as exc:
         if str(exc) == "Face not found on source image":
             logger.warning(f"Face not found")
