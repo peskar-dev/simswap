@@ -66,13 +66,9 @@ def generate_faceswap(self, file_path: str, video_path: str):
         roop.run(file_path, video_path, output_path)
     except (OnnxFail, OnnxRuntimeException) as exc:
         logger.exception(f"OnnxFail processing file: {file_path}")
-        try:
-            self.retry(exc=exc, countdown=60)  # retry after 60 seconds
-        except MaxRetriesExceededError:
-            # Mark the worker for shutdown before the final retry attempt
-            with open(f"/tmp/shutdown_worker_{os.getpid()}", "w") as f:
-                f.write("shutdown")
-            raise  # re-raise the exception to ensure the task is marked as failed
+        with open(f"/tmp/shutdown_worker_{os.getpid()}", "w") as f:
+            f.write("shutdown")
+        self.retry(exc=exc, countdown=60)  # retry after 60 seconds
     except Exception as exc:
         if str(exc) == "Face not found on source image":
             logger.warning(f"Face not found")
