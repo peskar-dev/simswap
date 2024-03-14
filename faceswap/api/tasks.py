@@ -56,7 +56,7 @@ def generate_faceswap(self, file_path: str, video_path: str):
     except Exception as exc:
         logger.exception(f"Error processing file: {file_path}")
         raise self.retry(exc=exc)
-    finally:
+    else:
         delete_dir.apply_async(args=[dir_name], countdown=600, queue="delete")
         self.update_state(
             state=states.SUCCESS,
