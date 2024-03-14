@@ -7,6 +7,9 @@ from faceswap.celery import app
 from faceswap.settings import ENVIRONMENT
 from mainapp.models import VideoGenerationCount
 from onnxruntime.capi.onnxruntime_pybind11_state import Fail as OnnxFail
+from onnxruntime.capi.onnxruntime_pybind11_state import (
+    RuntimeException as OnnxRuntimeException,
+)
 
 if ENVIRONMENT == "production":
     import roop
@@ -54,8 +57,8 @@ def generate_faceswap(self, file_path: str, video_path: str):
     output_path = os.path.join(dir_name, "output.mp4")
     try:
         roop.run(file_path, video_path, output_path)
-    except OnnxFail as exc:
-        logger.exception(f"Error processing file: {file_path}")
+    except (OnnxFail, OnnxRuntimeException) as exc:
+        logger.exception(f"OnnxFail processing file: {file_path}")
         self.retry(exc=exc)
         os._exit(os.EX_OSERR)
     except Exception as exc:
