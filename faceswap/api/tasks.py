@@ -54,8 +54,11 @@ def generate_faceswap(self, file_path: str, video_path: str):
     try:
         roop.run(file_path, video_path, output_path)
     except Exception as exc:
-        logger.exception(f"Error processing file: {file_path}")
-        raise self.retry(exc=exc)
+        if str(exc) == "Face not found on source image":
+            logger.warning(f"Face not found")
+        else:
+            logger.exception(f"Error processing file: {file_path}")
+            raise self.retry(exc=exc)
     else:
         delete_dir.apply_async(args=[dir_name], countdown=600, queue="delete")
         self.update_state(
