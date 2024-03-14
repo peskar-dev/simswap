@@ -39,7 +39,7 @@ def delete_dir(dir_name: str):
         raise
 
 
-@app.task(bind=True)
+@app.task(bind=True, max_retries=3)
 def generate_faceswap(self, file_path: str, video_path: str):
     """
     Generate a faceswap from a photo and a video.
