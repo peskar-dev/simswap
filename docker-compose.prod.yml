@@ -83,3 +83,14 @@ services:
               device_ids: ['3']
               capabilities: [gpu]
     command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-4@${HOSTNAME}
+
+  celery-5:
+    <<: *celery-config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['3']
+              capabilities: [gpu]
+    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n delete-worker@${HOSTNAME} -Q delete
