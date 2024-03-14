@@ -43,6 +43,8 @@ def handle_in_progress_or_success(
     task: AsyncResult, task_status: str
 ) -> TaskStatusDict | None:
     if task.ready():
+        if not hasattr(task, "result"):
+            return {"queue": None, "status": "in_progress", "file_path": None}
         file_path = task.result.get("file_path")
         if not os.path.exists(file_path):
             return None
