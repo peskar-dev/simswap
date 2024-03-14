@@ -11,7 +11,7 @@ x-celery-config: &celery-config
     - /mnt/share/faceswap/outputs/:/app/outputs/
     - ../tmp/.insightface:/root/.insightface
     - ../tmp/.opennsfw2:/root/.opennsfw2
-  command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker@${HOSTNAME} -Q generate
+  command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker@${HOSTNAME} 
 
 services:
   celery-1:
