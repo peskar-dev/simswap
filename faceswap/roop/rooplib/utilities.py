@@ -23,6 +23,7 @@ TEMP_VIDEO_FILE = "temp.mp4"
 def run_ffmpeg(args: list[str]) -> bool:
     commands = ["ffmpeg", "-hide_banner", "-loglevel", config.log_level]
     commands.extend(args)
+    print("25:", commands)
     try:
         subprocess.check_output(commands, stderr=subprocess.STDOUT)
         return True
@@ -101,9 +102,8 @@ def restore_audio(target_path: str, frame_dir: str, output_path: str) -> None:
         "-y",
         output_path,
     ]
-    done = run_ffmpeg(commands)
-    if not done:
-        move_temp(target_path, output_path)
+    run_ffmpeg(commands)
+    print("105:", commands)
 
 
 def get_temp_frame_paths(target_path: str) -> list[str]:
