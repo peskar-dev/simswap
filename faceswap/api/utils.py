@@ -9,12 +9,12 @@ from celery.result import AsyncResult
 from django.core.exceptions import SuspiciousFileOperation
 from django.core.files import File
 from django.core.files.storage import FileSystemStorage
-from kombu.exceptions import OperationalError
-from rest_framework import exceptions
-
 from faceswap.celery import app as celery_app
 from faceswap.settings import BASE_DIR, redis_client
+from kombu.exceptions import OperationalError
 from mainapp.models import Video
+from rest_framework import exceptions
+
 from .tasks import generate_faceswap
 
 logger = logging.getLogger(__name__)
@@ -46,9 +46,7 @@ def handle_in_progress_or_success(
         file_path = task.result.get("file_path")
         if not os.path.exists(file_path):
             return None
-        file_path = str(
-            os.path.relpath(str(file_path), f"{BASE_DIR}/outputs")
-        )
+        file_path = str(os.path.relpath(str(file_path), f"{BASE_DIR}/outputs"))
     else:
         file_path = None
     return {"queue": None, "status": task_status, "file_path": file_path}
@@ -98,7 +96,7 @@ def save_file(file: File) -> str:
         os.chmod(temp_dir, 0o755)
 
         fs = FileSystemStorage(location=temp_dir)
-        file_name = fs.save(file.name, file)
+        file_name = fs.save(f"image.${file.name.split('.')[-1]}", file)
 
         return fs.path(file_name)
     except SuspiciousFileOperation:
