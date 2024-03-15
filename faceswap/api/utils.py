@@ -35,12 +35,12 @@ def get_task_position(task_id: str) -> TaskStatusDict | None:
     elif task_status in {"started", "in_progress", "success", "retry"}:
         return handle_in_progress_or_success(task, task_status)
     print(f"Task {task} not found")
-    return None
+    return {"queue": None, "status": task_status, "file_path": None}
 
 
 def handle_in_progress_or_success(
     task: AsyncResult, task_status: str
-) -> TaskStatusDict | None:
+) -> TaskStatusDict:
     if task.ready() and task.result is not None:
         file_path = task.result.get("file_path")
         if not os.path.exists(file_path):
@@ -55,7 +55,7 @@ def handle_in_progress_or_success(
     return {"queue": None, "status": task_status, "file_path": file_path}
 
 
-def handle_pending(task: AsyncResult) -> TaskStatusDict | None:
+def handle_pending(task: AsyncResult) -> TaskStatusDict:
     reserved_tasks = get_reserved_tasks()
     if task.id in reserved_tasks:
         return {
