@@ -15,6 +15,12 @@ x-celery-config: &celery-config
 
 services:
   celery-1:
+    restart: on-failure
+    healthcheck:
+      test: ["nvidia-smi"]
+      interval: 5s
+      retries: 0
+      timeout: 5s
     <<: *celery-config
     deploy:
       resources:
