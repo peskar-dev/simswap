@@ -45,6 +45,21 @@ def get_face_swapper() -> Any:
     return FACE_SWAPPER
 
 
+def _run_insightface():
+    model_path = resolve_relative_path("../models/inswapper_128.onnx")
+    insightface.model_zoo.get_model(
+        model_path,
+        providers=decode_execution_providers(config.execution_providers),
+    )
+
+
+def _test():
+    thread1 = threading.Thread(target=_run_insightface)
+    thread2 = threading.Thread(target=_run_insightface)
+    thread1.start()
+    thread2.start()
+
+
 def clear_face_swapper() -> None:
     global FACE_SWAPPER
 
