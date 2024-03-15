@@ -30,10 +30,10 @@ def get_task_position(task_id: str) -> TaskStatusDict | None:
     task = AsyncResult(task_id, app=celery_app)
     task_status = str(task.status).lower()
 
-    if task_status in ("in_progress", "success"):
+    if task_status in {"started", "in_progress", "success"}:
         return handle_in_progress_or_success(task, task_status)
 
-    if task_status == "pending":
+    elif task_status == "pending":
         return handle_pending(task)
 
     return None
