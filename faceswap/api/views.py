@@ -1,6 +1,6 @@
 import logging
 
-from rest_framework import generics, status, exceptions
+from rest_framework import exceptions, generics, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -31,8 +31,6 @@ class TaskStatusView(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         task_id = kwargs.get("task_id")
         task_status = get_task_position(task_id)
-        if task_status is None:
-            raise exceptions.NotFound("Task not found")
         return Response(task_status, status=status.HTTP_200_OK)
 
 
