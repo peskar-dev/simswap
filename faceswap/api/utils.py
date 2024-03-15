@@ -34,7 +34,7 @@ def get_task_position(task_id: str) -> TaskStatusDict | None:
         return handle_pending(task)
     elif task_status in {"started", "in_progress", "success", "retry"}:
         return handle_in_progress_or_success(task, task_status)
-
+    print(f"Task {task} not found")
     return None
 
 
@@ -44,7 +44,11 @@ def handle_in_progress_or_success(
     if task.ready() and task.result is not None:
         file_path = task.result.get("file_path")
         if not os.path.exists(file_path):
-            return None
+            return {
+                "queue": None,
+                "status": task_status,
+                "file_path": file_path,
+            }
         file_path = str(os.path.relpath(str(file_path), f"{BASE_DIR}/outputs"))
     else:
         file_path = None
