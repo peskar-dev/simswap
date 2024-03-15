@@ -46,7 +46,9 @@ def generate_faceswap(self, file_path: str, video_path: str):
     Generate a faceswap from a photo and a video.
     Then delete
     """
-
+    if base_dir := os.getenv("OUTPUT_BASE_DIR"):
+        file_path = file_path.replace("/app", base_dir)
+        video_path = video_path.replace("/app", "./")
     if not os.path.exists(file_path):
         logger.error(f"File not found: {file_path}")
         raise FileNotFoundError(f"File not found: {file_path}")
