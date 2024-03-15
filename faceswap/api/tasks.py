@@ -67,9 +67,10 @@ def generate_faceswap(self, file_path: str, video_path: str):
     except Exception as exc:
         if str(exc) == "Face not found on source image":
             logger.warning(f"Face not found")
+            self.update_state(state=states.FAILURE)
         else:
             logger.exception(f"Error processing file: {file_path}")
-            raise self.retry(exc=exc)
+            raise self.retry(exc=exc, countdown=10)
     else:
         delete_dir.apply_async(args=[dir_name], countdown=600, queue="delete")
         return {"file_path": output_path}
