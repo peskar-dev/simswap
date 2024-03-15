@@ -5,7 +5,11 @@ import cv2
 import insightface
 from roop.rooplib import config
 from roop.rooplib.core import update_status
-from roop.rooplib.face_analyser import find_similar_face, get_one_face
+from roop.rooplib.face_analyser import (
+    clear_face_analyser,
+    find_similar_face,
+    get_one_face,
+)
 from roop.rooplib.face_reference import (
     clear_face_reference,
     get_face_reference,
@@ -80,6 +84,7 @@ def pre_start(source_path: str, target_path: str) -> bool:
 def post_process() -> None:
     clear_face_swapper()
     clear_face_reference()
+    clear_face_analyser()
 
 
 def swap_face(

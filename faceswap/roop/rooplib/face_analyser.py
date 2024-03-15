@@ -1,4 +1,5 @@
 import threading
+import typing
 
 import insightface
 import numpy
@@ -21,6 +22,12 @@ def get_face_analyser() -> any:
             )
             FACE_ANALYSER.prepare(ctx_id=0)
     return FACE_ANALYSER
+
+
+def clear_face_analyser() -> None:
+    global FACE_ANALYSER
+
+    FACE_ANALYSER = None
 
 
 def get_one_face(frame: Frame, position: int = 0) -> Face | None:
