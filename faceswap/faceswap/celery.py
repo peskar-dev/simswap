@@ -13,12 +13,12 @@ app.conf.task_routes = {
     "api.tasks.delete_dir": {"queue": "delete"},
 }
 
-if ENVIRONMENT == "production":
-    from roop.rooplib.face_analyser import get_face_analyser
-    from roop.rooplib.processors.frame.face_swapper import get_face_swapper
-
-    @worker_before_create_process.connect
-    def pre_fork(*_, **__):
-
-        get_face_analyser()
-        get_face_swapper()
+# if ENVIRONMENT == "production":
+# from roop.rooplib.face_analyser import get_face_analyser
+# from roop.rooplib.processors.frame.face_swapper import get_face_swapper
+#
+# @worker_before_create_process.connect
+# def pre_fork(*_, **__):
+#
+#     get_face_analyser()
+#     get_face_swapper()
