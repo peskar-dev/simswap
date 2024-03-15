@@ -45,16 +45,16 @@ services:
   flower:
     image: faceswap:latest
 
-#  celery-1:
-#    <<: *celery-config
-#    deploy:
-#      resources:
-#        reservations:
-#          devices:
-#            - driver: nvidia
-#              device_ids: ['0']
-#              capabilities: [gpu]
-#    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-1@${HOSTNAME} -Ofair
+  celery-1:
+    <<: *celery-config
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['0']
+              capabilities: [gpu]
+    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-1@main -Ofair
 #
 #  celery-2:
 #    <<: *celery-config
