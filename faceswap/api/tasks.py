@@ -63,7 +63,7 @@ def generate_faceswap(self, file_path: str, video_path: str):
         roop.run(file_path, video_path, output_path)
     except (OnnxFail, OnnxRuntimeException) as exc:
         logger.error(f"OnnxFail processing file: {file_path}")
-        raise self.retry(exc=exc)
+        raise self.retry(exc=exc, countdown=10)
     except Exception as exc:
         if str(exc) == "Face not found on source image":
             logger.warning(f"Face not found")
