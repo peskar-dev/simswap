@@ -54,16 +54,15 @@ def generate_faceswap(self, file_path: str, video_path: str):
         logger.error(f"File not found: {video_path}")
         raise FileNotFoundError(f"File not found: {video_path}")
     logger.info(f"Processing file: {file_path}")
-    self.update_state(state="in_progress")
 
     dir_name = os.path.dirname(file_path)
 
     output_path = os.path.join(dir_name, "output.mp4")
     try:
         roop.run(file_path, video_path, output_path)
-    except (OnnxFail, OnnxRuntimeException):
+    except (OnnxFail, OnnxRuntimeException) as exc:
         logger.exception(f"OnnxFail processing file")
-        os.kill(os.getpid(), signal.SIGSEGV)
+        raise self.retry(exc=exc)
     except Exception as exc:
         if str(exc) == "Face not found on source image":
             logger.warning(f"Face not found")
