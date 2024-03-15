@@ -31,6 +31,8 @@ class TaskStatusView(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         task_id = kwargs.get("task_id")
         task_status = get_task_position(task_id)
+        if task_status is None:
+            raise exceptions.NotFound("Task not found")
         return Response(task_status, status=status.HTTP_200_OK)
 
 

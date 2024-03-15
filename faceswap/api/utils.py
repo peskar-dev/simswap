@@ -75,6 +75,11 @@ def handle_pending(task: AsyncResult) -> TaskStatusDict:
                 "status": "pending",
                 "file_path": None,
             }
+    return {
+        "queue": None,
+        "status": "pending",
+        "file_path": None,
+    }
 
 
 def get_reserved_tasks() -> dict[str, int]:
