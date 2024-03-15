@@ -97,9 +97,7 @@ def pre_start(source_path: str, target_path: str) -> bool:
 
 
 def post_process() -> None:
-    clear_face_swapper()
     clear_face_reference()
-    clear_face_analyser()
 
 
 def swap_face(
