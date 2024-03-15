@@ -72,7 +72,4 @@ def generate_faceswap(self, file_path: str, video_path: str):
             raise self.retry(exc=exc)
     else:
         delete_dir.apply_async(args=[dir_name], countdown=600, queue="delete")
-        self.update_state(
-            state=states.SUCCESS,
-            meta={"file_path": output_path},
-        )
+        return {"file_path": output_path}
