@@ -40,7 +40,7 @@ def delete_dir(dir_name: str):
         raise
 
 
-@app.task(bind=True, max_retries=3)
+@app.task(bind=True, max_retries=5, default_retry_delay=1)
 def generate_faceswap(self, file_path: str, video_path: str):
     """
     Generate a faceswap from a photo and a video.
@@ -61,16 +61,16 @@ def generate_faceswap(self, file_path: str, video_path: str):
     output_path = os.path.join(dir_name, "output.mp4")
     try:
         roop.run(file_path, video_path, output_path)
-    except (OnnxFail, OnnxRuntimeException) as exc:
+    except (OnnxFail, OnnxRuntimeException):
         logger.error(f"OnnxFail processing file: {file_path}")
-        raise self.retry(exc=exc, countdown=1)
+        os.kill(os.getpid(), signal.SIGSEGV)
     except Exception as exc:
         if str(exc) == "Face not found on source image":
             logger.warning(f"Face not found")
             self.update_state(state=states.FAILURE)
         else:
             logger.exception(f"Error processing file: {file_path}")
-            raise self.retry(exc=exc, countdown=1)
+            raise self.retry(exc=exc)
     else:
         delete_dir.apply_async(args=[dir_name], countdown=600, queue="delete")
         return {"file_path": output_path}
