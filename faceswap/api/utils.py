@@ -98,7 +98,9 @@ def get_reserved_tasks() -> dict[str, int]:
 
 def save_file(file: File) -> str:
     try:
-        output_dir = os.path.join(BASE_DIR, "outputs")
+        output_dir = os.path.join(
+            os.getenv("OUTPUT_BASE_DIR", BASE_DIR), "outputs"
+        )
         os.makedirs(output_dir, exist_ok=True)
         temp_dir = tempfile.mkdtemp(dir=output_dir)
         os.chmod(temp_dir, 0o755)
