@@ -60,8 +60,6 @@ def generate_faceswap(self, file_path: str, video_path: str):
     dir_name = os.path.dirname(file_path)
 
     output_path = os.path.join(dir_name, "output.mp4")
-    if base_dir:
-        output_path = output_path.replace("/mnt/share/faceswap", "/app")
     try:
         roop.run(file_path, video_path, output_path)
     except (OnnxFail, OnnxRuntimeException) as exc:
@@ -75,5 +73,10 @@ def generate_faceswap(self, file_path: str, video_path: str):
             logger.exception(f"Error processing file: {file_path}")
             raise self.retry(exc=exc)
     else:
+        if base_dir:
+            output_path = output_path.replace(
+                "/mnt/share/faceswap",
+                "/app",
+            )
         delete_dir.apply_async(args=[dir_name], countdown=600, queue="delete")
         return {"file_path": output_path}
