@@ -43,9 +43,11 @@ def handle_in_progress_or_success(
     task: AsyncResult, task_status: str
 ) -> TaskStatusDict | None:
     if task.ready():
-        if not hasattr(task, "result"):
+        try:
+            file_path = task.result.get("file_path")
+        except AttributeError:
+            logger.exception("Task has no attribute 'result'")
             return {"queue": None, "status": "in_progress", "file_path": None}
-        file_path = task.result.get("file_path")
         if not os.path.exists(file_path):
             return None
         file_path = str(os.path.relpath(str(file_path), f"{BASE_DIR}/outputs"))
