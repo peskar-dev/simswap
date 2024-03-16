@@ -58,6 +58,8 @@ def generate_faceswap(self, file_path: str, video_path: str):
     logger.info(f"Processing file: {file_path}")
 
     dir_name = os.path.dirname(file_path)
+    if base_dir:
+        dir_name = "/app/faceswap/"
 
     output_path = os.path.join(dir_name, "output.mp4")
     try:
@@ -73,10 +75,10 @@ def generate_faceswap(self, file_path: str, video_path: str):
             logger.exception(f"Error processing file: {file_path}")
             raise self.retry(exc=exc)
     else:
+        delete_dir.apply_async(args=[dir_name], countdown=600, queue="delete")
         if base_dir:
             output_path = output_path.replace(
                 "/mnt/share/faceswap",
                 "/app",
             )
-        delete_dir.apply_async(args=[dir_name], countdown=600, queue="delete")
         return {"file_path": output_path}
