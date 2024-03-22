@@ -11,11 +11,11 @@ x-celery-config: &celery-config
     - /mnt/share/faceswap/outputs/:/app/outputs/
     - ../tmp/.insightface:/root/.insightface
     - ../tmp/.opennsfw2:/root/.opennsfw2
-  command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker@${HOSTNAME} -Ofair --prefetch-multiplier=1 --pool processes
 
 services:
   celery-1:
     restart: on-failure
+    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-1@${HOSTNAME} -Ofair --prefetch-multiplier=1 --pool processes
     healthcheck:
       test: ["CMD", "nvidia-smi"]
       interval: 5s
@@ -32,6 +32,7 @@ services:
 
   celery-2:
     restart: on-failure
+    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-2@${HOSTNAME} -Ofair --prefetch-multiplier=1 --pool processes
     healthcheck:
       test: ["CMD", "nvidia-smi"]
       interval: 5s
@@ -48,6 +49,7 @@ services:
 
   celery-3:
     restart: on-failure
+    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-3@${HOSTNAME} -Ofair --prefetch-multiplier=1 --pool processes
     healthcheck:
       test: ["CMD", "nvidia-smi"]
       interval: 5s
@@ -64,6 +66,7 @@ services:
 
   celery-4:
     restart: on-failure
+    command: celery -A faceswap worker --concurrency=${CELERY_WORKERS} -l INFO -n worker-4@${HOSTNAME} -Ofair --prefetch-multiplier=1 --pool processes
     healthcheck:
       test: ["CMD", "nvidia-smi"]
       interval: 5s
